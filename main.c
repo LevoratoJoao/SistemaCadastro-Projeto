@@ -1,5 +1,6 @@
 /**
  * @file main.c
+ * @author Alexandre Aparecido da Silva (alexandreaparecido@alunos.utfpr.edu.br)
  * @author João Vitor Levorato de Souza (joaosouza.2021@alunos.utfpr.edu.br)
  * @brief
  * @version 0.1
