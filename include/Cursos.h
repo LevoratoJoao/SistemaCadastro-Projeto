@@ -1,3 +1,6 @@
+#ifndef CURSOS_H
+#define CURSOS_H
+
 typedef struct
 {
     int idCurso;
@@ -13,3 +16,5 @@ int pesquisarCurso(Curso infoCurso[], char nome[], int id, int total[]);
 void alterarCurso(Curso infoCurso[], char nome[], int id, int total[]);
 void listarCursos(Curso infoCurso[], int total[]);
 FILE *salvarArqCurso(FILE *arq, Curso cursos[], int total[]);
+
+#endif

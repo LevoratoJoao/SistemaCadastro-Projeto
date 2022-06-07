@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "Cursos.h"
+#include <Cursos.h>
 #define MAX 10
 
 /**
@@ -54,9 +54,13 @@ Curso *inserirCurso(Curso infoCurso[], int quantidade, int total[])
     printf("Inserir curso no sistema\n");
     printf("- Preencha os campos abaixo com as informacoes do Curso: \n");
     setbuf(stdin, NULL);
+    
+    int realocador = MAX; // #######################################
+
     if (infoCurso[total[1] - 1].idCurso != 0)//Verifica se a ultima posicao do vetor esta preenchida (vetor total[1] com total de cursos menos 1)
     {
-        int realocador = realocador + (MAX + 10);
+        realocador += 10; // #######################################
+
         infoCurso = (Curso*) realloc(infoCurso, realocador * sizeof(Curso));//realoca infoCurso para preencher mais
         //realloc ainda nao esta funcionando
         if (infoCurso == NULL)
