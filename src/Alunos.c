@@ -23,19 +23,22 @@ FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
         if (arq == NULL)
         {
             printf("Erro ao abrir arquivo!!!\n");
-            exit(1);
+            // exit(1);
+            return NULL;
         }
     }
-    if (arq == NULL)
-    {
-        printf("Erro ao abrir arquivo!!!\n");
-        exit(1);
-    }
+    // if (arq == NULL)
+    // {
+    //     printf("Erro ao abrir arquivo!!!\n");
+    //     exit(1);
+    // }
+    
     for (int i = 0; i < MAX; i++)
     {
         //armazena as infformacoes do arquivo na variavel
         fread(infoAluno, sizeof(Aluno), MAX, arq);
     }
+
     return arq;
 }
 

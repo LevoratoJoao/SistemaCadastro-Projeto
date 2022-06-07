@@ -1,11 +1,16 @@
+SRC=./src/*.c
+INCLUDE=-I./include/
+BIN=./bin
+EXTRA_FLAGS = -Wall -Werror -Wextra
 
+all:
+	gcc $(SRC) -g -lm $(EXTRA_FLAGS) $(INCLUDE) -o $(BIN)
 
-exec: 
-	./main
-	
 run:
-	gcc main.c Alunos.c Cursos.c -o main
-
+	$(BIN)
 
 clean:
-	rm -f *.o main
+	rm $(BIN)
+
+valgrind:
+	valgrind --tool=memcheck --leak-check=full --track-origins=yes --show-leak-kinds=all --show-reachable=yes ./$(BIN)
