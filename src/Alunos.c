@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <Alunos.h>
 
-#define MAX 5
+#define MAX 3
 
 /**
  * @brief Abre o arquivo que estao salvos as informacoes dos alunos
@@ -15,12 +15,12 @@
  */
 FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
 {
-    FILE *arq = fopen(nome, "rb");
+    FILE *arq = fopen(nome, "r+b");
     if (arq == NULL)
     {
         //se o arquivo nao existe ele cria um novo
         printf("Arquivo nao esta no sistema!\nCriando arquivo...\n");
-        arq = fopen(nome, "wb");
+        arq = fopen(nome, "w+b");
         if (arq == NULL)
         {
             printf("Erro ao abrir arquivo!!!\n");
@@ -28,12 +28,6 @@ FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
             return NULL;
         }
     }
-    // if (arq == NULL)
-    // {
-    //     printf("Erro ao abrir arquivo!!!\n");
-    //     exit(1);
-    // }
-    
     for (int i = 0; i < MAX; i++)
     {
         //armazena as infformacoes do arquivo na variavel

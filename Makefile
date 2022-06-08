@@ -1,6 +1,6 @@
 SRC=./src/*.c
 INCLUDE=-I./include/
-BIN=./bin
+BIN=./trabalhoCorno
 EXTRA_FLAGS = -Wall -Werror -Wextra
 
 all:
