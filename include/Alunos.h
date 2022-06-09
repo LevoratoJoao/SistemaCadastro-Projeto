@@ -1,3 +1,6 @@
+#ifndef ALUNOS_H
+#define ALUNOS_H
+
 typedef struct
 {
     int dia;
@@ -23,3 +26,4 @@ void listarAlunos(Aluno infoAluno[], int total[]);
 FILE *salvarArqAluno(FILE *arq, Aluno alunos[], int total[]);
 
 
+#endif 

@@ -177,7 +177,7 @@ int removerCurso(Curso infoCurso[], char nome[], int id, int total[])
  * @return int
  */
 int pesquisarCurso(Curso infoCurso[], char nome[], int id, int total[])
-{
+{ 
     for (int i = 0; i < total[1]; i++)
     {
         if (strcasecmp(infoCurso[i].nome, nome) == 0 || infoCurso[i].idCurso == id)
