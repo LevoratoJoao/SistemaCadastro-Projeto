@@ -18,12 +18,12 @@ typedef struct
 } Aluno;
 
 FILE *abrirArqAluno(char nome[], Aluno infoAluno[]);
-Aluno *inserirAluno(Aluno infoAluno[], int quantidade, int total[]);
-int removerAluno(Aluno infoAluno[], char nome[], int id, int total[]);
-int pesquisarAluno(Aluno infoAluno[], char nome[], int id, int total[]);
-void alterarAluno(Aluno infoAluno[], char nome[], int id, int total[]);
-void listarAlunos(Aluno infoAluno[], int total[]);
-FILE *salvarArqAluno(FILE *arq, Aluno alunos[], int total[]);
+void inserirAluno(Aluno infoAluno[], int quantidade, int total);
+int removerAluno(Aluno infoAluno[], char nome[], int id, int total);
+int pesquisarAluno(Aluno infoAluno[], char nome[], int id, int total);
+void alterarAluno(Aluno infoAluno[], char nome[], int id, int total);
+void listarAlunos(Aluno infoAluno[], int total);
+FILE *salvarArqAluno(FILE *arq, Aluno alunos[], int total);
 
 
-#endif 
+#endif

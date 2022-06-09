@@ -31,9 +31,8 @@ FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
     for (int i = 0; i < MAX; i++)
     {
         //armazena as infformacoes do arquivo na variavel
-        fread(infoAluno, sizeof(Aluno), MAX, arq);
+        fread(&infoAluno[i], sizeof(Aluno), 1, arq);
     }
-
     return arq;
 }
 
@@ -45,7 +44,7 @@ FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
  * @param total
  * @return Aluno*
  */
-Aluno *inserirAluno(Aluno infoAluno[], int quantidade, int total[])
+void inserirAluno(Aluno infoAluno[], int quantidade, int total)
 {
     int indice = 0;//indice
 
@@ -55,7 +54,7 @@ Aluno *inserirAluno(Aluno infoAluno[], int quantidade, int total[])
 
     int realocador = MAX; // #######################################
 
-    if (infoAluno[total[0] - 1].idAluno != 0)//Verifica se a ultima posicao do vetor esta preenchida (vetor total[1] com total de alunos menos 1)
+    if (infoAluno[total - 1].idAluno != 0)//Verifica se a ultima posicao do vetor esta preenchida (vetor total[1] com total de alunos menos 1)
     {
         realocador += 10; // #######################################
 
@@ -72,7 +71,7 @@ Aluno *inserirAluno(Aluno infoAluno[], int quantidade, int total[])
         if (infoAluno[indice].idAluno == 0)//If() -- Verifica se o aluno na posição do indice esta vazio, se estiver pode ser registrao um aluno nessaa posição, se nao passa para a proxima
         {
             quantidade = quantidade + indice;//Soma a quantidade de alunos que o usuario o sistema quer inserir com o indice, dessa forma caso alguma posição já estiver sendo ocupada a quantidade de usuarios a serem inserios permace a mesma
-            total[0] = quantidade;//total de alunos recebe a quantidade total
+            total = quantidade;//total de alunos recebe a quantidade total
             for (int i = indice; i < quantidade; i++)//i recebe o valor de indice para que a ordem de inserção dos dados seja de acordo com o que já esta registrado no sistema
             {
                 do
@@ -110,7 +109,6 @@ Aluno *inserirAluno(Aluno infoAluno[], int quantidade, int total[])
         }
         indice++;
     }
-    return infoAluno;
 }
 
 /**
@@ -141,10 +139,10 @@ Aluno limparAlunos(Aluno infoAluno[], int indice)
  * @param total
  * @return int
  */
-int removerAluno(Aluno infoAluno[], char nome[], int id, int total[])
+int removerAluno(Aluno infoAluno[], char nome[], int id, int total)
 {
     char confirmacao;
-    for (int i = 0; i < total[0]; i++)
+    for (int i = 0; i < total; i++)
     {
         if (strcasecmp(infoAluno[i].nome, nome) == 0 || infoAluno[i].idAluno == id)//Busca o aluno desejado
         {
@@ -180,9 +178,9 @@ int removerAluno(Aluno infoAluno[], char nome[], int id, int total[])
  * @param total
  * @return int
  */
-int pesquisarAluno(Aluno infoAluno[], char nome[], int id, int total[])
+int pesquisarAluno(Aluno infoAluno[], char nome[], int id, int total)
 {
-    for (int i = 0; i < total[0]; i++)
+    for (int i = 0; i < total; i++)
     {
         if (strcasecmp(infoAluno[i].nome, nome) == 0 || infoAluno[i].idAluno == id)
         {
@@ -203,10 +201,10 @@ int pesquisarAluno(Aluno infoAluno[], char nome[], int id, int total[])
  * @param id
  * @param total
  */
-void alterarAluno(Aluno infoAluno[], char nome[], int id, int total[])
+void alterarAluno(Aluno infoAluno[], char nome[], int id, int total)
 {
     int opcao;
-    for (int i = 0; i < total[0]; i++)
+    for (int i = 0; i < total; i++)
     {
         if (strcasecmp(infoAluno[i].nome, nome) == 0 || infoAluno[i].idAluno == id)
         {
@@ -264,13 +262,13 @@ void alterarAluno(Aluno infoAluno[], char nome[], int id, int total[])
  * @param infoAluno
  * @param total
  */
-void listarAlunos(Aluno infoAluno[], int total[])
+void listarAlunos(Aluno infoAluno[], int total)
 {
-    for (int i = 0; i < total[0]; i++)
+    for (int i = 0; i < total; i++)
     {
         printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", infoAluno[i].idAluno, infoAluno[i].nome, infoAluno[i].idade, infoAluno[i].nascimento.dia, infoAluno[i].nascimento.mes, infoAluno[i].nascimento.ano, infoAluno[i].cidade);
     }
-    printf("Total de alunos registrados no sistema: %d\n", total[0]);
+    printf("Total de alunos registrados no sistema: %d\n", total);
     printf("Aperte ENTER para voltar ao menu\n");
     setbuf(stdin, NULL);
     getchar();
@@ -284,16 +282,15 @@ void listarAlunos(Aluno infoAluno[], int total[])
  * @param total
  * @return FILE*
  */
-FILE *salvarArqAluno(FILE *arq, Aluno alunos[], int total[])
+FILE *salvarArqAluno(FILE *arq, Aluno alunos[], int total)
 {
     int aux;
 
     printf("Salvando os dados...\nNao feche o programa!\n");
-    for (int i = 0; i < total[0]; i++)
+    for (int i = 0; i < total; i++)
     {
-        fwrite(alunos, sizeof(Aluno), MAX, arq);
+        fwrite(&alunos[i], sizeof(Aluno), 1, arq);
     }
-    fseek(arq, 0, SEEK_END);
     aux = ftell(arq);
     if (aux == 0)//Verifica se os dados foram salvos corretamente, se o arquivo estiver vazio eles nao foram salvos
     {

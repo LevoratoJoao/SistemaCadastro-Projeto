@@ -16,17 +16,12 @@
 #include <Usuarios.h>
 #include <Alunos.h>
 #include <Cursos.h>
-
-#define ALUNO "../dataAluno.dat"
-#define CURSO "../dataCurso.dat"
-#define MATRICULA "../dataMatricula.dat"
-#define USER "../dataUser.dat"
-#define MAX 5
+#include <userInterface.h>
 
 int main()
 {
-    
 
+    userInterface();
 
     // Aluno *infoAluno = NULL; // ARRUMAR ESSA PICA
     // Curso *infoCurso = NULL; // ARRUMAR ESSA PICA
@@ -40,9 +35,9 @@ int main()
     // char auxNome[51];//Variavel para pesquisa e remoção de registros pelo nome
     // int auxNumero;//Variavel para pesquisa e remoção de registros pelo ID
 
-    
 
-    
+
+
     // free(infoAluno);
     // free(infoCurso);
     // fclose(arqAluno);
