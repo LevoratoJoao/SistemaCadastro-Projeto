@@ -3,7 +3,13 @@
 #include <utils.h>
 #include <string.h>
 
-char *getUserInput();
+void alunoOptions();
+
+char *getUserInput() {
+    char *input = lerString(stdin, '\n');
+
+    return input;
+}
 
 void userInterface() {
     printf("Bem Vindo ao sistema\nOperacoes:\n- Digite o numero da base de dados que deseja acessar:\n1 - Alunos\n2 - Cursos\n3 - Matriculas\n4 - Salvar operacoes\n5 - Sair do sistema\n");
@@ -11,7 +17,7 @@ void userInterface() {
 
     char *opcao = NULL;
 
-    do {
+    while (true) {
         opcao = getUserInput();
         
         if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 5) {
@@ -24,114 +30,93 @@ void userInterface() {
         free(opcao);
 
         switch(valorOpcao) {
-            case 1:
+            case 1: // Alunos
+                alunoOptions();
                 break;
+        
+            case 2: // Cursos
+                cursosOptions();
+                break;
+
+            case 3: // Matriculas
+                
+                break;
+            
+            case 4: // Salvar
+    //         arqAluno = salvarArqAluno(arqAluno, infoAluno, quantidadeTotal);
+    //         arqCurso = salvarArqCurso(arqCurso, infoCurso, quantidadeTotal);
+                break;
+
+            case 5: // Sair
+                return;
             
         }
 
-    } while ()
-
-
+    }
 }
 
-char *getUserInput() {
-    char *input = lerString(stdin, '\n');
+void alunoOptions() {
 
-    return input;
-}
+    // CRIAR ALUNO
 
-// do
-    // {
-    //     printf("Bem Vindo ao sistema\nOperacoes:\n- Digite o numero da base de dados que deseja acessar:\n1 - Alunos\n2 - Cursos\n3 - Matriculas\n4 - Salvar operacoes\n5 - Sair do sistema\n");
-    //     scanf("%d", &opcao[0]);
-    //     getchar();
-    //     switch (opcao[0])
-    //     {
-    //     case 1:
-    //         infoAluno = (Aluno*) calloc(MAX, sizeof(Aluno));
-    //         //Alocar vetor
-    //         if (infoAluno == NULL)
-    //         {
-    //             printf("Erro: memoria insuficiente\n");
-    //             return EXIT_FAILURE;
-    //         }
+    printf("\nRegistro de Alunos\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir aluno\n2 - Remover aluno\n3 - Pesquisar\n4 - Alterar aluno\n5 - Listar alunos\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
 
-    //         do
-    //         {
-    //             printf("\nRegistro de Alunos\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir aluno\n2 - Remover aluno\n3 - Pesquisar\n4 - Alterar aluno\n5 - Listar alunos\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
-    //             scanf("%d", &opcao[1]);
-    //             getchar();
-    //             switch (opcao[1])
-    //             {
-    //             case 1:
-    //                 //Inserir alunos
-    //                 printf("Digite quantos alunos deseja inserir no sistema: ");
-    //                 scanf("%d", &quantidade);
-    //                 infoAluno = inserirAluno(infoAluno, quantidade, quantidadeTotal);
-    //                 break;
-    //             case 2:
-    //                 //Remover aluno
-    //                 printf("Como deseja remover o aluno do registro ?\n1 - ID\n2 - Nome\n");
-    //                 scanf("%d", &opcao[2]);
-    //                 switch (opcao[2])
-    //                 {
-    //                 case 1:
-    //                     //Remover por ID
-    //                     printf("Digite o ID do aluno que deseja excluir: ");
-    //                     scanf("%d", &auxNumero);
-    //                     //Verificar se encontrou o aluno (return 1 na funcao = nao achou)
-    //                     if (removerAluno(infoAluno, auxNome, auxNumero, quantidadeTotal) == 1)
-    //                     {
-    //                         printf("Aluno nao encontrado\n");
-    //                         printf("Aperte ENTER para voltar ao menu\n");
-    //                         setbuf(stdin, NULL);
+    while (true) {
+        char *opcao = getUserInput();
+
+        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
+            printf("Opção inválida! Digite novamente:\n");
+            free(opcao);
+            continue;
+        }
+
+        char valorOpcao = atoi(opcao);
+        free(opcao);
+
+        switch (valorOpcao) {
+            case 1: // Inserir aluno
+                printf("Digite a quantidade de alunos que deseja inserir:\n");
+                char *quantidade = getUserInput();
+                int qtd = atoi(quantidade);
+                free(quantidade);
+
+                // INSERIR O ALUNO
+                // infoAluno = inserirAluno(infoAluno, quantidade, quantidadeTotal);
+
+                break;
+        
+            case 2: // Remover aluno
+                printf("Digite o ID do aluno a ser removido:\n");
+                char *id = getUserInput();
+
+                int idAluno = atoi(id);
+                free(id);
+
+
+    //          if (removerAluno(infoAluno, auxNome, auxNumero, quantidadeTotal) == 1) {
+    //                  printf("Aluno nao encontrado\n");
+    //                  printf("Aperte ENTER para voltar ao menu\n");
+    //                  setbuf(stdin, NULL);
     //                         getchar();
-    //                     } else
-    //                     {
+    //                     } else {
     //                         printf("Aluno removido do sistema!\n");
     //                         printf("Aperte ENTER para voltar ao menu\n");
     //                         setbuf(stdin, NULL);
     //                         getchar();
     //                     }
-    //                     break;
-    //                 case 2:
-    //                     //Remover pelo nome
-    //                     printf("Digite o nome do aluno que deseja excluir: ");
-    //                     setbuf(stdin, NULL);
-    //                     fgets(auxNome, 50, stdin);
-    //                     auxNome[strcspn(auxNome, "\n")] = '\0';
-    //                     //Verificar se encontrou o aluno (return 1 na funcao = nao achou)
-    //                     if (removerAluno(infoAluno, auxNome, auxNumero, quantidadeTotal) == 1)
-    //                     {
-    //                         printf("Aluno nao encontrado\n");
-    //                         printf("Aperte ENTER para voltar ao menu\n");
-    //                         setbuf(stdin, NULL);
-    //                         getchar();
-    //                     } else //Se o retorno nao for 1 entao os dados foram apagados corretamente
-    //                     {
-    //                         printf("Aluno removido do sistema!\n");
-    //                         printf("Aperte ENTER para voltar ao menu\n");
-    //                         setbuf(stdin, NULL);
-    //                         getchar();
-    //                     }
-    //                     break;
-    //                 default:
-    //                     printf("Opcao invalida! Digite novamente\n");
-    //                     break;
-    //                 }
-    //                 break;
-    //             case 3:
-    //                 //Pesquisar aluno
-    //                 printf("Como deseja pesquisar o aluno no registro ?\n1 - ID\n2 - Nome\n");
-    //                 scanf("%d", &opcao[2]);
-    //                 getchar();
-    //                 switch (opcao[2])
-    //                 {
-    //                 case 1:
-    //                     //Pesquisar pelo ID
-    //                     printf("Digite o ID do aluno que deseja pesquisar: ");
-    //                     scanf("%d", &auxNumero);
-    //                     //Verificar se encontrou o aluno (return 1 na funcao = nao achou)
+
+
+                break;
+
+            case 3: // Pesquisar
+                printf("Digite o ID do aluno a ser pesquisado:\n");
+                char *id = getUserInput();
+
+                int idAluno = atoi(id);
+                free(id);
+
+                // SUGESTÃO DO ENTER: free(getUserInput());
+
     //                     if (pesquisarAluno(infoAluno, auxNome, auxNumero, quantidadeTotal) == 1)
     //                     {
     //                         printf("Aluno nao encontrado\n");
@@ -139,103 +124,74 @@ char *getUserInput() {
     //                         setbuf(stdin, NULL);
     //                         getchar();
     //                     }
-    //                     break;
-    //                 case 2:
-    //                     //Pesquisar pelo nome
-    //                     printf("Digite o nome do aluno que deseja pesquisar: ");
-    //                     setbuf(stdin, NULL);
-    //                     fgets(auxNome, 50, stdin);
-    //                     auxNome[strcspn(auxNome, "\n")] = '\0';
-    //                     //Verificar se encontrou o aluno (return 1 na funcao = nao achou)
-    //                     if (pesquisarAluno(infoAluno, auxNome, auxNumero, quantidadeTotal) == 1)
-    //                     {
-    //                         printf("Aluno nao encontrado\n");
-    //                         printf("Aperte ENTER para voltar ao menu\n");
-    //                         setbuf(stdin, NULL);
-    //                         getchar();
-    //                     }
-    //                     break;
-    //                 default:
-    //                     printf("Opcao invalida! Digite novamente\n");
-    //                     break;
-    //                 }
-    //                 break;
-    //             case 4:
-    //                 //Alterar aluno
-    //                 printf("Como deseja acessar o aluno do registro ?\n1 - ID\n2 - Nome\n");
-    //                 scanf("%d", &opcao[2]);
-    //                 getchar();
-    //                 switch (opcao[2])
-    //                 {
-    //                 case 1:
-    //                     //Alterar por ID
-    //                     printf("Digite o ID do aluno que deseja alterar: ");
-    //                     scanf("%d", &auxNumero);
-    //                     alterarAluno(infoAluno, auxNome, auxNumero, quantidadeTotal);
-    //                     break;
-    //                 case 2:
-    //                     //Alterar pelo nome
-    //                     printf("Digite o nome do aluno que deseja alterar: ");
-    //                     setbuf(stdin, NULL);
-    //                     fgets(auxNome, 50, stdin);
-    //                     auxNome[strcspn(auxNome, "\n")] = '\0';
-    //                     alterarAluno(infoAluno, auxNome, auxNumero, quantidadeTotal);
-    //                     break;
-    //                 default:
-    //                     printf("Opcao invalida! Digite novamente\n");
-    //                     break;
-    //                 }
-    //                 break;
-    //             case 5:
-    //                 //Listar alunos
-    //                 listarAlunos(infoAluno, quantidadeTotal);
-    //                 break;
-    //             case 6:
-    //                 //Salvar
-    //                 arqAluno = salvarArqAluno(arqAluno, infoAluno, quantidadeTotal);
-    //                 break;
-    //             case 7:
-    //                 break;
-    //             default:
-    //                 printf("Opcao invalida! Digite novamente\n");
-    //                 break;
-    //             }
-    //         } while (opcao[1] != 7);
-    //         break;
-    //     case 2:
-    //         infoCurso = (Curso*) calloc(MAX, sizeof(Curso));
-    //         //Alocar vetor
-    //         if (infoCurso == NULL)
-    //         {
-    //             printf("Erro: memoria insuficiente\n");
-    //             exit(1);
-    //         }
-    //         do
-    //         {
-    //             printf("\nRegistro de Cursos\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir curso\n2 - Remover curso\n3 - Pesquisar curso\n4 - Alterar curso\n5 - Listar cursos\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
-    //             scanf("%d", &opcao[1]);
-    //             getchar();
-    //             switch (opcao[1])
-    //             {
-    //             case 1:
-    //                 //Inserir cursos
-    //                 printf("Digite quantos cursos deseja inserir no sistema: ");
-    //                 scanf("%d", &quantidade);
-    //                 //Ocorre um erro, ao voltar para main os dados sao perdidos, dentro das funções eles estão sendo salvos corretamente
-    //                 infoCurso = inserirCurso(infoCurso, quantidade, quantidadeTotal);
-    //                 break;
-    //             case 2:
-    //                 //Remover curso
-    //                 printf("Como deseja remover o curso do registro ?\n1 - ID\n2 - Nome\n");
-    //                 scanf("%d", &opcao[2]);
-    //                 getchar();
-    //                 switch (opcao[2])
-    //                 {
-    //                 case 1:
-    //                     //Remover pelo ID
-    //                     printf("Digite o ID do curso que deseja excluir: ");
-    //                     scanf("%d", &auxNumero);
-    //                     //Verificar se encontrou o curso (return 1 na funcao = nao achou)
+
+                break;
+            
+            case 4: // Alterar aluno
+                printf("Digite o ID do aluno a ser alterado:\n");
+                char *id = getUserInput();
+
+                int idAluno = atoi(id);
+                free(id);
+
+                // alterarAluno(infoAluno, auxNome, auxNumero, quantidadeTotal);
+                
+                break;
+
+            case 5: // Listar alunos
+
+                // listarAlunos(infoAluno, quantidadeTotal);
+                break;
+
+            case 6: // Salvar operacoes
+
+                // arqAluno = salvarArqAluno(arqAluno, infoAluno, quantidadeTotal);
+                break;
+
+            case 7: // Voltar ao menu inicial
+                return;
+            
+        }
+
+
+
+    }
+}
+
+void cursosOptions() {
+    printf("\nRegistro de Cursos\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir curso\n2 - Remover curso\n3 - Pesquisar curso\n4 - Alterar curso\n5 - Listar cursos\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
+
+    while (true) {
+        char *opcao = getUserInput();
+
+        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
+            printf("Opção inválida! Digite novamente:\n");
+            free(opcao);
+            continue;
+        }
+
+        char valorOpcao = atoi(opcao);
+        free(opcao);
+
+        switch (valorOpcao) {
+            case 1: // Inserir curso
+                printf("Digite a quantidade de cursos que deseja inserir:\n");
+                char *quantidade = getUserInput();
+                int qtd = atoi(quantidade);
+                free(quantidade);
+
+                // INSERIR O CURSO
+                // infoCurso = inserirCurso(infoCurso, quantidade, quantidadeTotal);
+
+                break;
+        
+            case 2: // Remover curso
+                printf("Digite o ID do curso a ser removido:\n");
+
+                char *id = getUserInput();
+                int idCurso = atoi(id);
+                free(id);
+
     //                     if (removerCurso(infoCurso, auxNome, auxNumero, quantidadeTotal) == 1)
     //                     {
     //                         printf("Curso nao encontrado\n");
@@ -249,45 +205,18 @@ char *getUserInput() {
     //                         setbuf(stdin, NULL);
     //                         getchar();
     //                     }
-    //                     break;
-    //                 case 2:
-    //                     //Remover pelo nome
-    //                     printf("Digite o nome do curso que deseja excluir: ");
-    //                     setbuf(stdin, NULL);
-    //                     fgets(auxNome, 50, stdin);
-    //                     auxNome[strcspn(auxNome, "\n")] = '\0';
-    //                     //Verificar se encontrou o curso (return 1 na funcao = nao achou)
-    //                     if (removerCurso(infoCurso, auxNome, auxNumero, quantidadeTotal) == 1)
-    //                     {
-    //                         printf("Curso nao encontrado\n");
-    //                         printf("Aperte ENTER para voltar ao menu\n");
-    //                         setbuf(stdin, NULL);
-    //                         getchar();
-    //                     } else //Se o retorno nao for 1 entao os dados foram apagados corretamente
-    //                     {
-    //                         printf("Curso removido do sistema!\n");
-    //                         printf("Aperte ENTER para voltar ao menu\n");
-    //                         setbuf(stdin, NULL);
-    //                         getchar();
-    //                     }
-    //                     break;
-    //                 default:
-    //                     printf("Opcao invalida! Digite novamente\n");
-    //                     break;
-    //                 }
-    //                 break;
-    //             case 3:
-    //                 //Pesquisar curso
-    //                 printf("Como deseja pesquisar o curso no registro ?\n1 - ID\n2 - Nome\n");
-    //                 scanf("%d", &opcao[2]);
 
-    //                 switch (opcao[2])
-    //                 {
-    //                 case 1:
-    //                     //Pesquisar pelo ID
-    //                     printf("Digite o ID do curso que deseja pesquisar: ");
-    //                     scanf("%d", &auxNumero);
-    //                     //Verificar se encontrou o curso (return 1 na funcao = nao achou)
+                break;
+
+            case 3: // Pesquisar curso
+                printf("Digite o ID do curso a ser pesquisado:\n");
+                char *id = getUserInput();
+
+                int idCurso = atoi(id);
+                free(id);
+
+                // SUGESTÃO DO ENTER: free(getUserInput());
+
     //                     if (pesquisarCurso(infoCurso, auxNome, auxNumero, quantidadeTotal) == 1)
     //                     {
     //                         printf("Curso nao encontrado\n");
@@ -295,80 +224,31 @@ char *getUserInput() {
     //                         setbuf(stdin, NULL);
     //                         getchar();
     //                     }
-    //                     break;
-    //                 case 2:
-    //                     //Pesquisar pelo nome
-    //                     printf("Digite o nome do curso que deseja pesquisar: ");
-    //                     setbuf(stdin, NULL);
-    //                     fgets(auxNome, 50, stdin);
-    //                     auxNome[strcspn(auxNome, "\n")] = '\0';
-    //                     //Verificar se encontrou o curso (return 1 na funcao = nao achou)
-    //                     if (pesquisarCurso(infoCurso, auxNome, auxNumero, quantidadeTotal) == 1)
-    //                     {
-    //                         printf("Curso nao encontrado\n");
-    //                         printf("Aperte ENTER para voltar ao menu\n");
-    //                         getchar();
-    //                         setbuf(stdin, NULL);
-    //                     }
-    //                     break;
-    //                 default:
-    //                     printf("Opcao invalida! Digite novamente\n");
-    //                     break;
-    //                 }
-    //                 break;
-    //             case 4:
-    //                 //Alterar curso
-    //                 printf("Como deseja acessar o curso do registro ?\n1 - ID\n2 - Nome\n");
-    //                 scanf("%d", &opcao[2]);
-    //                 switch (opcao[2])
-    //                 {
-    //                 case 1:
-    //                     //Buscar pelo ID
-    //                     printf("Digite o ID do curso que deseja alterar: ");
-    //                     scanf("%d", &auxNumero);
-    //                     //Assim como em inserir os dados voltam vazios para a main, dentro da função são salvos
-    //                     alterarCurso(infoCurso, auxNome, auxNumero, quantidadeTotal);
-    //                     break;
-    //                 case 2:
-    //                     //Buscar pelo nome
-    //                     printf("Digite o nome do curso que deseja alterar: ");
-    //                     setbuf(stdin, NULL);
-    //                     fgets(auxNome, 50, stdin);
-    //                     auxNome[strcspn(auxNome, "\n")] = '\0';
-    //                     alterarCurso(infoCurso, auxNome, auxNumero, quantidadeTotal);
-    //                     break;
-    //                 default:
-    //                     printf("Opcao invalida! Digite novamente\n");
-    //                     break;
-    //                 }
-    //                 break;
-    //             case 5:
-    //                 //Listar cursos
-    //                 listarCursos(infoCurso, quantidadeTotal);
-    //                 break;
-    //             case 6:
-    //                 //Salvar cursos
-    //                 arqCurso = salvarArqCurso(arqCurso, infoCurso, quantidadeTotal);
-    //                 break;
-    //             case 7:
-    //                 break;
-    //             default:
-    //                 printf("Opcao invalida! Digite novamente\n");
-    //                 break;
-    //             }
-    //             break;
-    //         } while (opcao[1] != 7);
-    //         break;
-    //     case 3:
-    //         break;
-    //     case 4:
-    //         arqAluno = salvarArqAluno(arqAluno, infoAluno, quantidadeTotal);
-    //         arqCurso = salvarArqCurso(arqCurso, infoCurso, quantidadeTotal);
-    //         break;
-    //     case 5:
-    //         break;
-    //     default:
-    //         printf("Opcao invalida! Digite novamente\n");
-    //         break;
-    //     }
-    // } while (opcao[0] != 5);
+
+                break;
+
+            case 4: // Alterar curso
+                printf("Digite o ID do curso a ser alterado:\n");
+                char *id = getUserInput();
+                int idCurso = atoi(id);
+                free(id);
+
+                // alterarCurso(infoCurso, auxNome, auxNumero, quantidadeTotal);
+
+                break;
+
+            case 5: // Listar cursos
+
+    //          listarCursos(infoCurso, quantidadeTotal);
+                break;
+
+            case 6: // Salvar operacoes
+    //          arqCurso = salvarArqCurso(arqCurso, infoCurso, quantidadeTotal);
+                break;
+
+            case 7: // Voltar ao menu inicial
+                return;
+        }
+
+    }
+}

@@ -28,18 +28,6 @@ int main()
     
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     // Aluno *infoAluno = NULL; // ARRUMAR ESSA PICA
     // Curso *infoCurso = NULL; // ARRUMAR ESSA PICA
 
@@ -51,6 +39,8 @@ int main()
     // int quantidadeTotal[4] = {[0 ... 3] = 0};//Vetor para armazenar quantidade total de alunos, cursos, matricula e usuarios do sistema, sera utilizado nas funcoes para percorrer o total de cadastros. 0 - Alunos, 1 - Cursos, 2 - Matriculas 3 - Usuarios
     // char auxNome[51];//Variavel para pesquisa e remoção de registros pelo nome
     // int auxNumero;//Variavel para pesquisa e remoção de registros pelo ID
+
+    
 
     
     // free(infoAluno);
