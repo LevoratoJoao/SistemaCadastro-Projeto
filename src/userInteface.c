@@ -12,7 +12,6 @@
 #define ALUNO "../dataAluno.dat"
 #define CURSO "../dataCurso.dat"
 #define MATRICULA "../dataMatricula.dat"
-#define USER "../dataUser.dat"
 #define MAX 10
 
 void alunosOptions();
@@ -74,6 +73,7 @@ void alunosOptions() {
     Aluno *infoAluno = NULL;
     int totalAlunos = 0;
     FILE *arqAluno = abrirArqAluno(ALUNO, infoAluno);
+    printf("BASE DADOS - ALUNOS\n");
     char *quantidade = NULL;
     int qtd = 0;
     char *id = NULL;
@@ -105,7 +105,11 @@ void alunosOptions() {
                 qtd = atoi(quantidade);
                 free(quantidade);
                 //INSERIR O ALUNO
-                inserirAluno(infoAluno, qtd, totalAlunos);
+                inserirAluno(infoAluno, qtd, &totalAlunos);
+                for (int i = 0; i < totalAlunos; i++)
+                {
+                    printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", infoAluno[i].idAluno, infoAluno[i].nome, infoAluno[i].idade, infoAluno[i].nascimento.dia, infoAluno[i].nascimento.mes, infoAluno[i].nascimento.ano, infoAluno[i].cidade);//Mostra as informacoes atuais do aluno
+                }
                 break;
 
             case 2: // Remover aluno

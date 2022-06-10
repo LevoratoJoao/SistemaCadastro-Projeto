@@ -18,25 +18,22 @@
 #include <Cursos.h>
 #include <userInterface.h>
 
+#define USER "../dataUser.dat"
+
 int main()
 {
-
+    User *usuario = NULL;
+    FILE *arqUser = abrirArqUser(USER, usuario);
+    /* LoginInterface prototipo:
+        - abrir o arquivo de usuario e armazenar na variavel de usuario
+        - se o arquivo estiver vazio, pede novo cadastro e criptografa a senha, apos cadastro ira pedir login novamente
+        - a cada vez que colocar a senha ela é criptografada para poder ser comparada a senha original
+        - verificar se os dados armazenados na variavel da struct correspondem com os dados informados para o login
+        - se for libera acesso ao menu do sistema
+        - se nao for mostra uma mensagem de login errado e pede novamente
+        - apos login, perguntar se quer entrar nos menus do sistema ou se quer cadastrar novo usuario
+    */
     userInterface();
-
-    // Aluno *infoAluno = NULL; // ARRUMAR ESSA PICA
-    // Curso *infoCurso = NULL; // ARRUMAR ESSA PICA
-
-    // FILE *arqAluno = abrirArqAluno(ALUNO, infoAluno);
-    // FILE *arqCurso = abrirArqCurso(CURSO, infoCurso);
-
-    // int opcao[3] = {[0 ... 2] = 0};//Vetor das opcoes, util para nao ter que criar varias variaveis de opcao para cara submenu
-    // int quantidade;
-    // int quantidadeTotal[4] = {[0 ... 3] = 0};//Vetor para armazenar quantidade total de alunos, cursos, matricula e usuarios do sistema, sera utilizado nas funcoes para percorrer o total de cadastros. 0 - Alunos, 1 - Cursos, 2 - Matriculas 3 - Usuarios
-    // char auxNome[51];//Variavel para pesquisa e remoção de registros pelo nome
-    // int auxNumero;//Variavel para pesquisa e remoção de registros pelo ID
-
-
-
 
     // free(infoAluno);
     // free(infoCurso);

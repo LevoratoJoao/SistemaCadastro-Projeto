@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <Alunos.h>
 
-#define MAX 3
+#define MAX 10
 
 /**
  * @brief Abre o arquivo que estao salvos as informacoes dos alunos
@@ -28,10 +28,12 @@ FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
             return NULL;
         }
     }
+    printf("Arquivo aberto\n");
     for (int i = 0; i < MAX; i++)
     {
         //armazena as infformacoes do arquivo na variavel
         fread(&infoAluno[i], sizeof(Aluno), 1, arq);
+        printf("Lendo os dados do arquivo...\n");
     }
     return arq;
 }
@@ -44,7 +46,7 @@ FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
  * @param total
  * @return Aluno*
  */
-void inserirAluno(Aluno infoAluno[], int quantidade, int total)
+void inserirAluno(Aluno infoAluno[], int quantidade, int *total)
 {
     int indice = 0;//indice
 
@@ -54,7 +56,7 @@ void inserirAluno(Aluno infoAluno[], int quantidade, int total)
 
     int realocador = MAX; // #######################################
 
-    if (infoAluno[total - 1].idAluno != 0)//Verifica se a ultima posicao do vetor esta preenchida (vetor total[1] com total de alunos menos 1)
+    if (infoAluno[*total - 1].idAluno != 0)//Verifica se a ultima posicao do vetor esta preenchida (vetor total[1] com total de alunos menos 1)
     {
         realocador += 10; // #######################################
 
@@ -71,7 +73,7 @@ void inserirAluno(Aluno infoAluno[], int quantidade, int total)
         if (infoAluno[indice].idAluno == 0)//If() -- Verifica se o aluno na posição do indice esta vazio, se estiver pode ser registrao um aluno nessaa posição, se nao passa para a proxima
         {
             quantidade = quantidade + indice;//Soma a quantidade de alunos que o usuario o sistema quer inserir com o indice, dessa forma caso alguma posição já estiver sendo ocupada a quantidade de usuarios a serem inserios permace a mesma
-            total = quantidade;//total de alunos recebe a quantidade total
+            *total = quantidade;//total de alunos recebe a quantidade total
             for (int i = indice; i < quantidade; i++)//i recebe o valor de indice para que a ordem de inserção dos dados seja de acordo com o que já esta registrado no sistema
             {
                 do
@@ -99,6 +101,7 @@ void inserirAluno(Aluno infoAluno[], int quantidade, int total)
                     } else
                     {
                         printf("Aluno cadastrado no sistema!\n");
+                        printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", infoAluno[i].idAluno, infoAluno[i].nome, infoAluno[i].idade, infoAluno[i].nascimento.dia, infoAluno[i].nascimento.mes, infoAluno[i].nascimento.ano, infoAluno[i].cidade);//Mostra as informacoes atuais do aluno
                     }
                 } while (strcasecmp(infoAluno[i].nome, "\0") == 0 || infoAluno[i].idade <= 0 || infoAluno[i].nascimento.dia <= 0 || infoAluno[i].nascimento.mes <= 0 || infoAluno[i].nascimento.ano <= 0 || strcasecmp(infoAluno[i].cidade, "\0") == 0);//do while() -- caso uma das informações inseridas estiver com algum erro o usuario devera inserir novamente
             }
