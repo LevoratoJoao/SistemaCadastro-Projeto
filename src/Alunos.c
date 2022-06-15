@@ -35,6 +35,7 @@ FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
         fread(&infoAluno[i], sizeof(Aluno), 1, arq);
         printf("Lendo os dados do arquivo...\n");
     }
+
     return arq;
 }
 
@@ -48,6 +49,16 @@ FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
  */
 int inserirAluno(Aluno infoAluno[], int quantidade, int total)
 {
+    
+    //Verifica se tem um espaço disponível (id = 0)
+    while()
+
+
+    //Se saiu do while pq acabou o vetor  indice == total-> realloc
+
+
+    //Insere no indice "indice"
+    
     int indice = 0;//indice
 
     printf("Inserir aluno no sistema\n");
@@ -56,7 +67,7 @@ int inserirAluno(Aluno infoAluno[], int quantidade, int total)
 
     int realocador = MAX; // #######################################
 
-    if (infoAluno[total - 1].idAluno != 0)//Verifica se a ultima posicao do vetor esta preenchida (vetor total[1] com total de alunos menos 1)
+    if (quantidade > MAX)
     {
         realocador += 10; // #######################################
 
@@ -113,6 +124,7 @@ int inserirAluno(Aluno infoAluno[], int quantidade, int total)
         }
         indice++;
     }
+
     return total;
 }
 

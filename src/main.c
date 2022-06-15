@@ -24,12 +24,11 @@
 
 int main()
 {
-    /*
+    
     User *usuario = NULL;
     char *opcao = NULL;
     usuario = (User*) calloc(MAX, sizeof(User));
     FILE *arqUser = abrirArqUser(USER, usuario);
-
     if (logarUser(usuario) == 1)
     {
         while (1)
@@ -55,12 +54,13 @@ int main()
                     break;
                 case 3: // Sair
                     printf("Saindo do sistema...\n");
-                    break;
+                    return EXIT_SUCCESS;
+
             }
         }
     }
 
-
+    /*
      LoginInterface prototipo:
         - abrir o arquivo de usuario e armazenar na variavel de usuario
         - se o arquivo estiver vazio, pede novo cadastro e criptografa a senha, apos cadastro ira pedir login novamente
@@ -69,13 +69,13 @@ int main()
         - se for libera acesso ao menu do sistema
         - se nao for mostra uma mensagem de login errado e pede novamente
         - apos login, perguntar se quer entrar nos menus do sistema ou se quer cadastrar novo usuario
-
+    */
     fclose(arqUser);
     // free(infoAluno);
     // free(infoCurso);
     // fclose(arqAluno);
     // fclose(arqCurso);
-    */
+    
     userInterface();
-    return 0;
+    
 }
