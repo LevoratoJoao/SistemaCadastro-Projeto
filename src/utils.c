@@ -33,3 +33,9 @@ char *lerString(FILE *f, char parada) {
 
     return linha;
 }
+
+char *getUserInput() {
+    char *input = lerString(stdin, '\n');
+
+    return input;
+}

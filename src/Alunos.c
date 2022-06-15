@@ -46,7 +46,7 @@ FILE *abrirArqAluno(char nome[], Aluno infoAluno[])
  * @param total
  * @return Aluno*
  */
-void inserirAluno(Aluno infoAluno[], int quantidade, int *total)
+int inserirAluno(Aluno infoAluno[], int quantidade, int total)
 {
     int indice = 0;//indice
 
@@ -56,7 +56,7 @@ void inserirAluno(Aluno infoAluno[], int quantidade, int *total)
 
     int realocador = MAX; // #######################################
 
-    if (infoAluno[*total - 1].idAluno != 0)//Verifica se a ultima posicao do vetor esta preenchida (vetor total[1] com total de alunos menos 1)
+    if (infoAluno[total - 1].idAluno != 0)//Verifica se a ultima posicao do vetor esta preenchida (vetor total[1] com total de alunos menos 1)
     {
         realocador += 10; // #######################################
 
@@ -68,12 +68,13 @@ void inserirAluno(Aluno infoAluno[], int quantidade, int *total)
             exit(1);
         }
     }
+
     while (indice < MAX)
     {
         if (infoAluno[indice].idAluno == 0)//If() -- Verifica se o aluno na posição do indice esta vazio, se estiver pode ser registrao um aluno nessaa posição, se nao passa para a proxima
         {
             quantidade = quantidade + indice;//Soma a quantidade de alunos que o usuario o sistema quer inserir com o indice, dessa forma caso alguma posição já estiver sendo ocupada a quantidade de usuarios a serem inserios permace a mesma
-            *total = quantidade;//total de alunos recebe a quantidade total
+            total = quantidade;//total de alunos recebe a quantidade total
             for (int i = indice; i < quantidade; i++)//i recebe o valor de indice para que a ordem de inserção dos dados seja de acordo com o que já esta registrado no sistema
             {
                 do
@@ -112,6 +113,7 @@ void inserirAluno(Aluno infoAluno[], int quantidade, int *total)
         }
         indice++;
     }
+    return total;
 }
 
 /**
@@ -166,6 +168,7 @@ int removerAluno(Aluno infoAluno[], char nome[], int id, int total)
                 printf("Aperte ENTER para voltar ao menu\n");
                 getchar();
                 setbuf(stdin, NULL);
+                return 3;
             }
         }
     }
@@ -188,6 +191,7 @@ int pesquisarAluno(Aluno infoAluno[], char nome[], int id, int total)
         if (strcasecmp(infoAluno[i].nome, nome) == 0 || infoAluno[i].idAluno == id)
         {
             printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", infoAluno[i].idAluno, infoAluno[i].nome, infoAluno[i].idade, infoAluno[i].nascimento.dia, infoAluno[i].nascimento.mes, infoAluno[i].nascimento.ano, infoAluno[i].cidade);
+            return 0;
         }
     }
     return 1;
@@ -267,7 +271,7 @@ void alterarAluno(Aluno infoAluno[], char nome[], int id, int total)
  */
 void listarAlunos(Aluno infoAluno[], int total)
 {
-    for (int i = 0; i < total; i++)
+    for (int i = 0; i < MAX; i++)
     {
         printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", infoAluno[i].idAluno, infoAluno[i].nome, infoAluno[i].idade, infoAluno[i].nascimento.dia, infoAluno[i].nascimento.mes, infoAluno[i].nascimento.ano, infoAluno[i].cidade);
     }

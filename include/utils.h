@@ -5,5 +5,6 @@
 #include <stdbool.h>
 
 char *lerString(FILE *f, char parada);
+char *getUserInput();
 
 #endif

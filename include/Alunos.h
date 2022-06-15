@@ -18,7 +18,7 @@ typedef struct
 } Aluno;
 
 FILE *abrirArqAluno(char nome[], Aluno infoAluno[]);
-void inserirAluno(Aluno infoAluno[], int quantidade, int *total);
+int inserirAluno(Aluno infoAluno[], int quantidade, int total);
 int removerAluno(Aluno infoAluno[], char nome[], int id, int total);
 int pesquisarAluno(Aluno infoAluno[], char nome[], int id, int total);
 void alterarAluno(Aluno infoAluno[], char nome[], int id, int total);

@@ -17,12 +17,6 @@
 void alunosOptions();
 void cursosOptions();
 
-char *getUserInput() {
-    char *input = lerString(stdin, '\n');
-
-    return input;
-}
-
 void userInterface() {
 
     char *opcao = NULL;
@@ -71,7 +65,8 @@ void alunosOptions() {
 
     // CRIAR ALUNO
     Aluno *infoAluno = NULL;
-    int totalAlunos = 0;
+    infoAluno = (Aluno*) calloc(MAX, sizeof(Aluno));
+    int totalAlunos = MAX;
     FILE *arqAluno = abrirArqAluno(ALUNO, infoAluno);
     printf("BASE DADOS - ALUNOS\n");
     char *quantidade = NULL;
@@ -95,7 +90,6 @@ void alunosOptions() {
 
         switch (valorOpcao) {
             case 1: // Inserir aluno
-                infoAluno = (Aluno*) calloc(MAX, sizeof(Aluno));
                 if (infoAluno == NULL) {
                     printf("Erro ao alocar memória!\n");
                     break;
@@ -105,7 +99,7 @@ void alunosOptions() {
                 qtd = atoi(quantidade);
                 free(quantidade);
                 //INSERIR O ALUNO
-                inserirAluno(infoAluno, qtd, &totalAlunos);
+                totalAlunos = inserirAluno(infoAluno, qtd, totalAlunos);
                 for (int i = 0; i < totalAlunos; i++)
                 {
                     printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", infoAluno[i].idAluno, infoAluno[i].nome, infoAluno[i].idade, infoAluno[i].nascimento.dia, infoAluno[i].nascimento.mes, infoAluno[i].nascimento.ano, infoAluno[i].cidade);//Mostra as informacoes atuais do aluno
@@ -167,7 +161,7 @@ void alunosOptions() {
                 free(infoAluno);
                 fclose(arqAluno);
                 return;
-
+                break;
         }
     }
 }
