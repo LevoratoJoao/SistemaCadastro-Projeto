@@ -24,9 +24,10 @@
 
 int main()
 {
-    
+
     User *usuario = NULL;
     char *opcao = NULL;
+    int valorOpcao = 0;
     usuario = (User*) calloc(MAX, sizeof(User));
     FILE *arqUser = abrirArqUser(USER, usuario);
     if (logarUser(usuario) == 1)
@@ -42,7 +43,7 @@ int main()
                 free(opcao);
                 continue;
             }
-            char valorOpcao = atoi(opcao);
+            valorOpcao = atoi(opcao);
             free(opcao);
 
             switch(valorOpcao) {
@@ -75,7 +76,7 @@ int main()
     // free(infoCurso);
     // fclose(arqAluno);
     // fclose(arqCurso);
-    
+
     userInterface();
-    
+
 }

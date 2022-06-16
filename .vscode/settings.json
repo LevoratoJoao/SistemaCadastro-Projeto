@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "ctype.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "string.h": "c",
+        "*.tcc": "c",
+        "sstream": "c",
+        "streambuf": "c"
     }
 }

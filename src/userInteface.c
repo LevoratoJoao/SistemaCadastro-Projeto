@@ -4,9 +4,9 @@
 #include <ctype.h>
 
 #include <userInterface.h>
+#include <Cursos.h>
 #include <utils.h>
 #include <Alunos.h>
-#include <Cursos.h>
 #include <Matriculas.h>
 
 #define ALUNO "../dataAluno.dat"
@@ -64,13 +64,17 @@ void userInterface() {
 void alunosOptions() {
 
     // CRIAR ALUNO
-    Aluno *infoAluno = NULL;
-    infoAluno = (Aluno*) calloc(MAX, sizeof(Aluno));
-    int totalAlunos = MAX;
-    FILE *arqAluno = abrirArqAluno(ALUNO, infoAluno);
+    FILE *arquivo = abrirArqAluno(ALUNO); // NAO ESQUECER DE FECHAR O ARQUIVO
+    int totalAlunos;
+    printf("Lendo..");
+    Aluno *infoAluno = getAlunos(arquivo, &totalAlunos); // NAO ESQUECER DE DAR FREE
+
+    // Aluno *infoAluno = NULL;
+    // infoAluno = (Aluno*) calloc(MAX, sizeof(Aluno));
+    // int totalAlunos = MAX;
+    // FILE *arqAluno = abrirArqAluno(ALUNO, infoAluno);
+    // infoAluno = lerArquivo(arqAluno, infoAluno, &totalAlunos);
     printf("BASE DADOS - ALUNOS\n");
-    char *quantidade = NULL;
-    int qtd = 0;
     char *id = NULL;
     int idAluno = 0;
 
@@ -92,18 +96,16 @@ void alunosOptions() {
             case 1: // Inserir aluno
                 if (infoAluno == NULL) {
                     printf("Erro ao alocar memória!\n");
-                    break;
                 }
-                printf("Digite a quantidade de alunos que deseja inserir:\n");
-                quantidade = getUserInput();
-                qtd = atoi(quantidade);
-                free(quantidade);
                 //INSERIR O ALUNO
-                totalAlunos = inserirAluno(infoAluno, qtd, totalAlunos);
-                for (int i = 0; i < totalAlunos; i++)
-                {
-                    printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", infoAluno[i].idAluno, infoAluno[i].nome, infoAluno[i].idade, infoAluno[i].nascimento.dia, infoAluno[i].nascimento.mes, infoAluno[i].nascimento.ano, infoAluno[i].cidade);//Mostra as informacoes atuais do aluno
-                }
+                infoAluno = inserirAluno(infoAluno, &totalAlunos);
+
+                // for (int i = 0; i < totalAlunos; i++)
+                // {
+                //     printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", infoAluno[i].idAluno, infoAluno[i].nome, infoAluno[i].idade, infoAluno[i].nascimento.dia, infoAluno[i].nascimento.mes, infoAluno[i].nascimento.ano, infoAluno[i].cidade);//Mostra as informacoes atuais do aluno
+                // }
+
+                printf("TOTAL ALUNOS: %d\n", totalAlunos);
                 break;
 
             case 2: // Remover aluno
@@ -154,12 +156,12 @@ void alunosOptions() {
                 break;
 
             case 6: // Salvar operacoes
-                arqAluno = salvarArqAluno(arqAluno, infoAluno, totalAlunos);
+                arquivo = salvarArqAluno(arquivo, infoAluno, &totalAlunos);
                 break;
 
             case 7: // Voltar ao menu inicial
                 free(infoAluno);
-                fclose(arqAluno);
+                fclose(arquivo);
                 return;
                 break;
         }
