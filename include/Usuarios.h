@@ -4,6 +4,7 @@ typedef struct
     char senha[31];
 } User;
 
-FILE *abrirArqUser(char nome[], User usuario[]);
-void cadastrarUser(User usuario[]);
-int logarUser(User usuario[]);
+FILE *abrirArqUser(char *nome);
+User *getUsers(FILE *arqUser, int *total);
+User *cadastrarUser(User *usuario, int *total);
+int logarUser(User *usuario, int *total);

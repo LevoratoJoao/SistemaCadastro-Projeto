@@ -9,12 +9,13 @@ typedef struct
     int duracao;
 } Curso;
 
-FILE *abrirArqCurso(char nome[], Curso infoCurso[]);
-Curso *inserirCurso(Curso infoCurso[], int quantidade, int total[]);
-int removerCurso(Curso infoCurso[], char nome[], int id, int total[]);
-int pesquisarCurso(Curso infoCurso[], char nome[], int id, int total[]);
-void alterarCurso(Curso infoCurso[], char nome[], int id, int total[]);
-void listarCursos(Curso infoCurso[], int total[]);
-FILE *salvarArqCurso(FILE *arq, Curso cursos[], int total[]);
+FILE *abrirArqCurso(char *nome);
+Curso *getCursos(FILE *arquivo, int *total);
+Curso *inserirCurso(Curso *cursos, int *total);
+int removerCurso(Curso *cursos, char *nome, int id, int total);
+int pesquisarCurso(Curso *cursos, char *nome, int id, int total);
+void alterarCurso(Curso *cursos, char *nome, int id, int total);
+void listarCursos(Curso *cursos, int total);
+FILE *salvarArqCurso(FILE *arq, Curso *cursos, int *total);
 
 #endif

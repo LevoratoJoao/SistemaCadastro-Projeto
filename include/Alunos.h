@@ -19,11 +19,11 @@ typedef struct
 
 FILE *abrirArqAluno(char *nome);
 Aluno *getAlunos(FILE *arquivo, int *total);
-Aluno *inserirAluno(Aluno infoAluno[], int *total);
-int removerAluno(Aluno infoAluno[], char nome[], int id, int total);
-int pesquisarAluno(Aluno infoAluno[], char nome[], int id, int total);
-void alterarAluno(Aluno infoAluno[], char nome[], int id, int total);
-void listarAlunos(Aluno infoAluno[], int total);
+Aluno *inserirAluno(Aluno *alunos, int *total);
+int removerAluno(Aluno *alunos, char *nome, int id, int total);
+int pesquisarAluno(Aluno *alunos, char *nome, int id, int total);
+void alterarAluno(Aluno *alunos, char *nome, int id, int total);
+void listarAlunos(Aluno *alunos, int total);
 FILE *salvarArqAluno(FILE *arq, Aluno *alunos, int *total);
 
 

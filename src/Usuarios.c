@@ -4,19 +4,17 @@
 #include "Usuarios.h"
 #define MAX 10
 
-void criptografarSenha();
+User *criptografarSenha(User *usuarios, int indice);
 
 /**
- * @brief
+ * @brief Função que abre o arquivo de usuários
  *
  * @param nome
- * @param usuario
  * @return FILE*
  */
-FILE *abrirArqUser(char nome[], User usuario[])
+FILE *abrirArqUser(char *nome)
 {
-    int aux = 0;
-    FILE *arq = fopen(nome, "r+b");
+    FILE *arq = fopen(nome, "r+b"); // abre o arquivo para leitura e escrita
     if (arq == NULL)
     {
         //se o arquivo nao existe ele cria um novo
@@ -28,87 +26,134 @@ FILE *abrirArqUser(char nome[], User usuario[])
             return NULL;
         }
     }
-    printf("Arquivo aberto\n");
-    aux = ftell(arq);
-    if (aux == 0)
-    {
-        printf("Arquivo vazio!\n");
-        printf("Digite nome usuario: \n");
-        fgets(usuario[0].nome, 30, stdin);
-        usuario[0].nome[strcspn(usuario[0].nome, "\n")] = '\0';
-        printf("Digite a senha: \n");
-        fgets(usuario[0].senha, 30, stdin);
-        usuario[0].senha[strcspn(usuario[0].senha, "\n")] = '\0';
-        criptografarSenha(usuario);
-    } else
-    {
-        printf("Arquivo nao vazio!\n");
-        fseek(arq, 0, SEEK_SET);
-        fread(usuario, sizeof(User), MAX, arq);
-        //PEGAR TOTAL DE USUARIOS
-        printf("Lendo os dados do arquivo...\n");
-    }
+
     return arq;
 }
 
 /**
- * @brief Função que realiza o cadastro do usuario
+ * @brief le o arquivo de usuários e armazena os dados em um vetor de usuários
  *
- * @param usuario
+ * @param arquivo
+ * @param total
+ * @return User*
  */
-void cadastrarUser(User usuario[])
+User *getUsers(FILE *arquivo, int *total)
+{
+    User *usuarios = NULL; // vetor de usuários
+    int cont = 0; // contador de usuários
+    while (!feof(arquivo)) { // enquanto não chegar no fim do arquivo
+        if (cont % 10 == 0) { // se o contador for divisivel por 10 realoca o vetor
+            usuarios = (User*) realloc(usuarios, (cont + 10) * sizeof(User));
+        }
+        fread(&usuarios[cont], sizeof(User), 1, arquivo);
+
+        if (strcmp(usuarios[0].nome, "\0") == 0) { // se o nome da primeira posicao lida (primeira linha do arquivo) for vazio indica que nao há usuarios cadastrados no sistema entao é feito logo um cadastro e armaazenado no arquivo
+            printf("Ola, seja bem vindo :)\n");
+            printf("Digite nome de usuario: \n");
+            fgets(usuarios[cont].nome, 30, stdin);
+            usuarios[cont].nome[strcspn(usuarios[cont].nome, "\n")] = '\0';
+            printf("Digite a senha: \n");
+            fgets(usuarios[cont].senha, 30, stdin);
+            usuarios[cont].senha[strcspn(usuarios[cont].senha, "\n")] = '\0';
+            usuarios = criptografarSenha(usuarios, cont);
+            printf("%i\n", cont);
+            printf("Usuario: %s / Senha: %s\n", usuarios[cont].nome, usuarios[cont].senha);
+            fwrite(&usuarios[cont], sizeof(User), 1, arquivo);
+            cont--;
+        }
+        cont++;
+
+    }
+    for (int i = cont + 1; i < cont + MAX; i++) { // Indica que as posições estão vazias
+        strcpy(usuarios[i].nome, "\0");
+    }
+    *total = cont + 1;
+    fclose(arquivo);
+    return usuarios;
+}
+
+/**
+ * @brief Função que realiza o cadastro do usuarios
+ *
+ * @param usuarios
+ */
+User *cadastrarUser(User *usuarios, int *total)
 {
     int indice = 0;
-    printf("CADASTRO USUARIO\n");
-
-    while (indice < MAX)
+    char nome[31] = {"./dataUser.dat"};
+    FILE *arq = fopen(nome, "a+b"); // abre o arquivo para adicionar informações ao final dele
+    if (arq == NULL)
     {
-        //PEGAR TOTAL DE USERS PELO ARQUIVO, NAO SEI FAZER
-        //ASSIM NAO PRECISA VERIFICAR QUAL POSICAO TA LIVRE E QUAL NAO ESTA IGUAL EM ALUNOS 
-        for (int i = 0; i < MAX; i++)
-        {
-            printf("Digite nome usuario: \n");
-            fgets(usuario[i].nome, 30, stdin);
-            usuario[i].nome[strcspn(usuario[i].nome, "\n")] = '\0';
-            printf("Digite a senha: \n");
-            fgets(usuario[i].senha, 30, stdin);
-            usuario[i].senha[strcspn(usuario[i].senha, "\n")] = '\0';
-            criptografarSenha(usuario);
-        }
-        indice++;
+        printf("Erro ao abrir arquivo!!!\n");
+        // exit(1);
+        return NULL;
     }
-
+    for (int i = 0; i <= *total; i++) { // procura a primeira posição vazia
+        if (strcmp(usuarios[i].nome, "\0") == 0) {
+            indice = i;
+            break;
+        }
+    }
+    if (indice == *total + MAX) // se não houver posição vazia realoca o vetor
+    {
+        printf("Nao ha espaco disponivel...\nRealocando...\n");
+        int realocador = MAX;
+        realocador += 10;
+        usuarios = (User*) realloc(usuarios, realocador * sizeof(User)); //realoca para preencher mais
+        if (usuarios == NULL)
+        {
+            printf("Erro: memoria insuficiente\n");
+            return NULL;//return -1;
+        }
+    }
+    //preenchimento do usuario
+    printf("CADASTRO USUARIOS\n");
+    printf("Ola, seja bem vindo ao sistema :)\n");
+    printf("Digite nome de usuario: \n");
+    fgets(usuarios[indice].nome, 30, stdin);
+    usuarios[indice].nome[strcspn(usuarios[indice].nome, "\n")] = '\0';
+    printf("Digite a senha: \n");
+    fgets(usuarios[indice].senha, 30, stdin);
+    usuarios[indice].senha[strcspn(usuarios[indice].senha, "\n")] = '\0';
+    criptografarSenha(usuarios, indice);
+    printf("Usuario: %s / Senha: %s\n", usuarios[indice].nome, usuarios[indice].senha);
+    fwrite(&usuarios[indice], sizeof(User), 1, arq);
+    fclose(arq);
+    return usuarios;
 }
 
 /**
  * @brief Funcao que criptografa a senha do usuario
  *
- * @param usuario
+ * @param usuarios
  */
-void criptografarSenha(User usuario[])
+User *criptografarSenha(User *usuarios, int indice)
 {
-    for (long unsigned int i = 0; i < strlen(usuario->senha); i++) //strlen() nao vai nao sei o por que
+    printf("Criptografando senha...\n");
+    for (long unsigned int i = 0; i < strlen(usuarios[indice].senha); i++)
     {
-        usuario[0].senha[i] = usuario[0].senha[i] + 1;
+        usuarios[indice].senha[i] = usuarios[indice].senha[i] + 2; // criptografa a senha
     }
+    return usuarios;
 }
 
 /**
- * @brief
+ * @brief Funcao que realiza o login do usuario
  *
- * @param usuario
+ * @param usuarios
+ * @param total
  * @return int
  */
-int logarUser(User usuario[])
+int logarUser(User usuarios[], int *total)
 {
-    printf("LOGIN USUARIO\n");
+    printf("LOGIN\n");
     char nomeAux[31];
     char senhaAux[31];
     int tentativas = 0;
 
-    while (tentativas < 3)
+    while (tentativas < 3) // loop que realiza o login ate que o usuario digite 3 vezes a senha incorreta
     {
-        printf("Digite nome usuario: \n");
+        printf("Digite nome usuarios: \n");
         setbuf(stdin, NULL);
         fgets(nomeAux, 30, stdin);
         nomeAux[strcspn(nomeAux, "\n")] = '\0';
@@ -116,23 +161,30 @@ int logarUser(User usuario[])
         setbuf(stdin, NULL);
         fgets(senhaAux, 30, stdin);
         senhaAux[strcspn(senhaAux, "\n")] = '\0';
-        for (long unsigned int i = 0; i < strlen(senhaAux); i++) //strlen() nao vai nao sei o por que
+        for (long unsigned int i = 0; i < strlen(senhaAux); i++)
         {
-            senhaAux[i] = senhaAux[i] + 1; //criptografa a senha
+            senhaAux[i] = senhaAux[i] + 2; //criptografa a senha auxiliar
         }
-        if (strcmp(nomeAux, usuario[0].nome) == 0)
+        for (int i = 0; i <= *total; i++)
         {
-            printf("Nome de usuario correto\n");
-            if (strcmp(senhaAux, usuario[0].senha) == 0) //verifica se o usuario e senha sao iguais aos do arquivo
+            if (strcasecmp(usuarios[i].nome, nomeAux) == 0) // compara o nome do usuario com o nome digitado
             {
-                printf("Login realizado com sucesso!\n");
-                return 1;
+                printf("Nome de usuarios correto\n");
+                if (strcmp(senhaAux, usuarios[i].senha) == 0) //verifica se a senha auxiliar e senha do usuario da posicao sao iguais
+                {
+                    printf("Login realizado com sucesso!\n");
+                    return 1;
+                } else {
+                    printf("Senha incorreta\n");
+                    tentativas++;
+                }
             }
-        } else
-        {
-            printf("Login falhou!\n");
-            tentativas++;
         }
+        printf("Nome ou senha de usuarios incorretos\n");
+        tentativas++;
     }
+    printf("ATENCAO...\nVoce excedeu o numero de tentativas\n");
+    printf("Tentativas: %i\n", tentativas);
+    printf("Login falhou\n");
     return 0;
 }
