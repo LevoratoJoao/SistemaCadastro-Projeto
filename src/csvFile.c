@@ -5,7 +5,7 @@
 #include <string.h>
 
 FILE *openCSV() {
-    FILE *f = fopen("alunos.csv", "w");
+    FILE *f = fopen("alunos.csv", "w+");
 
     if (f == NULL) return NULL;
 
@@ -17,7 +17,7 @@ void writeLineFile(FILE *f, char *line) {
         free(line);
         return;
     }
-    
+
     fwrite(line, sizeof(char), strlen(line), f);
     free(line);
 }

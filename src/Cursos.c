@@ -94,14 +94,6 @@ Curso *inserirCurso(Curso *cursos, int *total)
     char *confirma = NULL; //confirmacao
     //Verifica se tem um espaço disponível (id = 0)
     int valorOpcao = 0;
-    // char nome[31] = {"./dataCurso.dat"};
-    // FILE *arq = fopen(nome, "a+b"); //Abre o arquivo para escrita no final dele
-    // if (arq == NULL)
-    // {
-    //     printf("Erro ao abrir arquivo!!!\n");
-    //     // exit(1);
-    //     return NULL;
-    // }
     while (valorOpcao != 2) //Enquanto não for escolhido a opção de sair
     {
         for (int i = 1; i <= *total; i++) { //Verifica se tem um espaço disponível (id = 0)
@@ -298,7 +290,7 @@ void alterarCurso(Curso cursos[], char nome[], int id, int total)
                     scanf("%d", &cursos[i].duracao);
                     break;
                 case 3:
-                    printf("Periodo em que nasceu: ");
+                    printf("Periodo: ");
                     setbuf(stdin, NULL);
                     fgets(cursos[i].periodo, 30, stdin);
                     cursos[i].periodo[strcspn(cursos[i].periodo, "\n")] = '\0';

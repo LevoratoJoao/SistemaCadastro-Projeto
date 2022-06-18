@@ -34,7 +34,8 @@ int main()
     {
         while (1)
         {
-            printf("--------------------\nSISTEMA DE ESCOLAR\n--------------------\n");
+            system("clear");
+            printf("----------------------\n- SISTEMA DE ESCOLAR -\n----------------------\n");
             printf("1 - Acessar base de dados\n2 - Cadastrar novo usuario\n3 - Sair\n");
             opcao = getUserInput();
 
@@ -48,9 +49,11 @@ int main()
 
             switch(valorOpcao) {
                 case 1: // Acessar base de dados
+                    system("clear");
                     userInterface();
                     break;
                 case 2: // Cadastrar novo usuario
+                    system("clear");
                     usuario = cadastrarUser(usuario, &totalUsuarios);
                     break;
                 case 3: // Sair

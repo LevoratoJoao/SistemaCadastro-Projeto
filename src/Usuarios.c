@@ -169,14 +169,10 @@ int logarUser(User usuarios[], int *total)
         {
             if (strcasecmp(usuarios[i].nome, nomeAux) == 0) // compara o nome do usuario com o nome digitado
             {
-                printf("Nome de usuarios correto\n");
                 if (strcmp(senhaAux, usuarios[i].senha) == 0) //verifica se a senha auxiliar e senha do usuario da posicao sao iguais
                 {
                     printf("Login realizado com sucesso!\n");
                     return 1;
-                } else {
-                    printf("Senha incorreta\n");
-                    tentativas++;
                 }
             }
         }
