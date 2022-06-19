@@ -2,11 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
 #include <Cursos.h>
 #include <utils.h>
 
-#define MAXIMO 10
+#define MAX 10
 
 /**
  * @brief Abre o arquivo que estao salvos as informacoes dos cursos
@@ -30,6 +29,7 @@ FILE *abrirArqCurso(char *nome)
             return NULL;
         }
     }
+    printf("Arquivo aberto\n");
 
     return arq;
 }
@@ -55,7 +55,7 @@ Curso *getCursos(FILE *arquivo, int *total) {
         }
         cont++;
     }
-    for (int i = cont; i <= cont + MAXIMO; i++) { // Indica que as posições estão vazias
+    for (int i = cont; i <= cont + MAX; i++) { // Indica que as posições estão vazias
         cursos[i].idCurso = 0;
     }
     *total = cont;
@@ -102,10 +102,10 @@ Curso *inserirCurso(Curso *cursos, int *total)
                 break;
             }
         }
-        if (indice == *total + MAXIMO) //Se não houver espaço disponível realoca o vetor
+        if (indice == *total + MAX) //Se não houver espaço disponível realoca o vetor
         {
             printf("Nao ha espaco disponivel...\nRealocando...\n");
-            int realocador = MAXIMO;
+            int realocador = MAX;
             realocador += 10;
             cursos = (Curso*) realloc(cursos, realocador * sizeof(Curso)); //realoca cursos para preencher mais
             if (cursos == NULL)
@@ -137,7 +137,7 @@ Curso *inserirCurso(Curso *cursos, int *total)
 
                 printf("ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n", cursos[indice].idCurso, cursos[indice].nome, cursos[indice].duracao, cursos[indice].periodo); //Mostra as informacoes atuais do Curso
 
-                printf("Deseja cadastrar outro curso? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro Curso
+                printf("Deseja cadastrar outro Curso? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro Curso
 
                 confirma = getUserInput();
                 char valorOpcao = atoi(confirma);
@@ -171,7 +171,7 @@ Curso *inserirCurso(Curso *cursos, int *total)
  * @param indice
  * @return Curso
  */
-Curso limparCursos(Curso cursos[], int indice)
+Curso limparcursos(Curso cursos[], int indice)
 {
     strcpy(cursos[indice].nome, "\0");
     cursos[indice].duracao = 0;
@@ -192,43 +192,34 @@ Curso limparCursos(Curso cursos[], int indice)
 int removerCurso(Curso cursos[], char nome[], int id, int total)
 {
     char *confirmacao;
-    int valorOpcao = 3;
-    /*
-    for (int i = 0; i < *totalMatriculas; i++)
-    {
-        if (matriculas[i].curso.idCurso == id) //Se o curso desejado estiver matriculado, nao pode ser removido
-        {
-            printf("ATENCAO!\nO curso que deseja remover tem uma matricula na base de dados\nAntes de remover os dados do curso altere ou remova a matricula do sistema\n");
-            printf("Aperte ENTER para voltar ao menu\n");
-            free(getUserInput());
-            return 3;
-        }
-    }
-    */
     for (int i = 0; i < total; i++)
     {
         if (strcasecmp(cursos[i].nome, nome) == 0 || cursos[i].idCurso == id)//Busca o Curso desejado
         {
-
             printf("As seguintes informacoes do Curso serao apagadas do registro:\n");
             printf("ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n", cursos[i].idCurso, cursos[i].nome, cursos[i].duracao, cursos[i].periodo);
             printf("Deseja continuar ? 1 - Sim / 2 - Nao\n");
             setbuf(stdin, NULL);
             confirmacao = getUserInput();
-            if (strlen(confirmacao) != 1 || atoi(confirmacao) < 1 || atoi(confirmacao) > 2) {
-                printf("Opção inválida! Digite novamente:\n");
-                free(confirmacao);
-                continue;
-            }
-            valorOpcao = atoi(confirmacao);
+            char valorOpcao = atoi(confirmacao);
             free(confirmacao);//Confirmacao para excluir
-
-            if (valorOpcao == 1) {
-
-                limparCursos(cursos, i);
-                return 0;
-            } else {
+            if (valorOpcao == 2) {
+                printf("Operacao finalizada\n");
+                printf("Aperte ENTER para voltar ao menu\n");
+                free(getUserInput());
                 return 3;
+
+            }
+            else if (valorOpcao != 1) {
+                printf("Erro!!!\nDigite novamente\n");
+                printf("Deseja continuar ? 1 - Sim / 2 - Nao\n");
+                confirmacao = getUserInput();
+                valorOpcao = atoi(confirmacao);
+                free(confirmacao);
+            }
+            else {
+                limparcursos(cursos, i);
+                return 0;
             }
         }
     }
@@ -267,27 +258,6 @@ int pesquisarCurso(Curso *cursos, char *nome, int id, int total)
  */
 void alterarCurso(Curso cursos[], char nome[], int id, int total)
 {
-    /* IMPLEMENTACOES FUTURAS
-    int igual = 0;
-    for (int i = 0; i < *totalMatriculas; i++)
-    {
-        if (matriculas[i].curso.idCurso == id) //Se o curso desejado estiver matriculado, nao pode ser alterado
-        {
-            printf("ATENCAO!\nO curso que deseja alterar tem uma matricula na base de dados\nQualquer informacao deste curso que for alterada sera alterada na matricula\n");
-            printf("Deseja continuar ? 1 - Sim / 2 - Nao\n");
-            char *confirmacao = getUserInput();
-            int valorOpcao = atoi(confirmacao);
-            free(confirmacao);
-            if (valorOpcao == 1) {
-                igual = i; //variavel para armazenar a posicao da matricula na qual o aluno desejado esta matriculado
-                continue;
-            }
-            else {
-                return;
-            }
-        }
-    }
-    */
     for (int i = 0; i < total; i++)
     {
         if (strcasecmp(cursos[i].nome, nome) == 0 || cursos[i].idCurso == id)
@@ -338,7 +308,6 @@ void alterarCurso(Curso cursos[], char nome[], int id, int total)
                 } else
                 {
                     printf("Curso alterado no sistema!\n");
-                    //matriculas[igual].curso = cursos[i];
                 }
             } while (verificarCurso(cursos, i) == 1);//Verificacao de preenchimento das informacoes
         }

@@ -2,11 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
 #include <Alunos.h>
 #include <utils.h>
 
-#define MAXIMO 10
+#define MAX 10
 
 /**
  * @brief Abre o arquivo que estao salvos as informacoes dos alunos
@@ -30,6 +29,7 @@ FILE *abrirArqAluno(char *nome)
             return NULL;
         }
     }
+    printf("Arquivo aberto\n");
 
     return arq;
 }
@@ -49,42 +49,19 @@ Aluno *getAlunos(FILE *arquivo, int *total) {
         if (cont % 10 == 0) { // se o contador for divisivel por 10 realoca o vetor
             alunos = (Aluno*) realloc(alunos, (cont + 10) * sizeof(Aluno));
         }
-        tmp = fread(&alunos[cont], sizeof(Aluno), 1, arquivo); // le o arquivo e armazena os dados em um vetor de cursos
-        if (tmp == 0) { // Diminui o contador pois nao há mais cursos no arquivo, isso ocorre por feof pega uma linha a mais do arquivo entao total de cursos no arquivo viria com um a mais o que daria problemas na exibicao e insercao de novos
-            cont--;
-        }
-        cont++;
-    }
-    for (int i = cont; i <= cont + MAXIMO; i++) { // Indica que as posições estão vazias
-        alunos[i].idAluno = 0;
-    }
-    *total = cont;
-    fclose(arquivo);
-    return alunos;
-}
-/*
-Aluno *getAlunos(FILE *arquivo, int *total) {
-    Aluno *alunos = NULL;
-    int cont = 0;
-    int tmp;
-    while (!feof(arquivo)) { // enquanto não chegar no fim do arquivo
-        if (cont % 10 == 0) { // se o contador for divisivel por 10 realoca o vetor
-            alunos = (Aluno*) realloc(alunos, (cont + 10) * sizeof(Aluno));
-        }
         tmp = fread(&alunos[cont], sizeof(Aluno), 1, arquivo); // le o arquivo e armazena os dados em um vetor de alunos
         if (tmp == 0) { // Diminui o contador pois nao há mais alunos no arquivo, isso ocorre por feof pega uma linha a mais do arquivo entao total de alunos no arquivo viria com um a mais o que daria problemas na exibicao e insercao de novos
             cont--;
         }
         cont++;
     }
-    for (int i = cont; i <= cont + MAXIMO; i++) { // Indica que as posições estão vazias
+    for (int i = cont; i <= cont + MAX; i++) { // Indica que as posições estão vazias
         alunos[i].idAluno = 0;
     }
     *total = cont;
     fclose(arquivo);
     return alunos;
 }
-*/
 
 /**
  * @brief If() -- verifica se os dados do aluno foram inseridos corretamente
@@ -117,7 +94,14 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
     char *confirma = NULL; //confirmacao
     //Verifica se tem um espaço disponível (id = 0)
     int valorOpcao = 0;
-
+    // char nome[31] = {"./dataAluno.dat"};
+    // FILE *arq = fopen(nome, "a+b"); //Abre o arquivo para escrita no final dele
+    // if (arq == NULL)
+    // {
+    //     printf("Erro ao abrir arquivo!!!\n");
+    //     // exit(1);
+    //     return NULL;
+    // }
     while (valorOpcao != 2) //Enquanto não for escolhido a opção de sair
     {
         for (int i = 1; i <= *total; i++) { //Verifica se tem um espaço disponível (id = 0)
@@ -126,10 +110,10 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
                 break;
             }
         }
-        if (indice == *total + MAXIMO) //Se não houver espaço disponível realoca o vetor
+        if (indice == *total + MAX) //Se não houver espaço disponível realoca o vetor
         {
             printf("Nao ha espaco disponivel...\nRealocando...\n");
-            int realocador = MAXIMO;
+            int realocador = MAX;
             realocador += 10;
             alunos = (Aluno*) realloc(alunos, realocador * sizeof(Aluno)); //realoca alunos para preencher mais
             if (alunos == NULL)
@@ -154,7 +138,7 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
             scanf("%d", &alunos[indice].nascimento.ano);
             setbuf(stdin, NULL);
             printf("Cidade em que nasceu: ");
-            fgets(alunos[indice].cidade, 50, stdin);
+            fgets(alunos[indice].cidade, 30, stdin);
             alunos[indice].cidade[strcspn(alunos[indice].cidade, "\n")] = '\0';
             setbuf(stdin, NULL);
             if (verificarAluno(alunos, indice) == 1) { //verifica se os dados foram preenchidos corretamente
@@ -169,21 +153,23 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
                 printf("Deseja cadastrar outro aluno? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro aluno
 
                 confirma = getUserInput();
-                if (strlen(confirma) != 1 || atoi(confirma) < 1 || atoi(confirma) > 2) {
-                    printf("Opção inválida! Digite novamente:\n");
-                    free(confirma);
-                    continue;
-                }
-                int valorOpcao = atoi(confirma);
+                char valorOpcao = atoi(confirma);
                 free(confirma);
 
                 if (valorOpcao == 2)
                 {
+                    //fclose(arq);
                     printf("Aperte ENTER para voltar ao menu\n");
                     free(getUserInput());// Apos inserido todos os alunos desejados basta apertaar ENTER para voltar ao menu
                     return alunos;
-                } else {
-                    continue;
+                } else if (valorOpcao != 1)
+                {
+                    printf("Erro!!!\nDigite novamente\n");
+                    printf("Deseja cadastrar outro aluno? (1 - S/ 2 - N): ");
+                    confirma = getUserInput();
+                    printf("%s\n", confirma);
+                    valorOpcao = atoi(confirma);
+                    free(confirma);
                 }
             }
         } while (verificarAluno(alunos, indice) == 1);//do while() -- caso uma das informações inseridas estiver com algum erro o usuario devera inserir novamente
@@ -222,43 +208,34 @@ Aluno limparAlunos(Aluno alunos[], int indice)
 int removerAluno(Aluno alunos[], char nome[], int id, int *total)
 {
     char *confirmacao;
-    int valorOpcao = 3;
-    /*
-    for (int i = 0; i < *totalMatriculas; i++)
-    {
-        if (matriculas[i].aluno.idAluno == id) //Se o aluno desejado estiver matriculado, nao pode ser removido
-        {
-            printf("ATENCAO!\nO aluno que deseja remover tem uma matricula na base de dados\nAntes de remover os dados do aluno altere ou remova a matricula do sistema\n");
-            printf("Aperte ENTER para voltar ao menu\n");
-            free(getUserInput());
-            return 3;
-        }
-    }
-    */
     for (int i = 0; i < *total; i++)
     {
         if (strcasecmp(alunos[i].nome, nome) == 0 || alunos[i].idAluno == id)//Busca o aluno desejado
         {
             printf("As seguintes informacoes do aluno serao apagadas do registro:\n");
             printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
-            setbuf(stdin, NULL);
             printf("Deseja continuar ? 1 - Sim / 2 - Nao\n");
+            setbuf(stdin, NULL);
             confirmacao = getUserInput();
-            if (strlen(confirmacao) != 1 || atoi(confirmacao) < 1 || atoi(confirmacao) > 2) {
-                printf("Opção inválida! Digite novamente:\n");
-                free(confirmacao);
-                continue;
-            }
-            valorOpcao = atoi(confirmacao);
+            char valorOpcao = atoi(confirmacao);
             free(confirmacao);//Confirmacao para excluir
+            if (valorOpcao == 2) {
+                printf("Operacao finalizada\n");
+                printf("Aperte ENTER para voltar ao menu\n");
+                free(getUserInput());
+                return 3;
 
-            if (valorOpcao == 1) {
-                limparAlunos(alunos, i);
-                (*total)--;
-                return 0;
+            }
+            else if (valorOpcao != 1) {
+                printf("Erro!!!\nDigite novamente\n");
+                printf("Deseja continuar ? 1 - Sim / 2 - Nao\n");
+                confirmacao = getUserInput();
+                valorOpcao = atoi(confirmacao);
+                free(confirmacao);
             }
             else {
-                return 3;
+                limparAlunos(alunos, i);
+                return 0;
             }
         }
     }
@@ -276,7 +253,7 @@ int removerAluno(Aluno alunos[], char nome[], int id, int *total)
  */
 int pesquisarAluno(Aluno *alunos, char *nome, int id, int total)
 {
-    for (int i = 0; i <= total; i++)
+    for (int i = 0; i < total; i++)
     {
         if (strcasecmp(alunos[i].nome, nome) == 0 || alunos[i].idAluno == id)
         {
@@ -295,30 +272,8 @@ int pesquisarAluno(Aluno *alunos, char *nome, int id, int total)
  * @param id
  * @param total
  */
-void alterarAluno(Aluno *alunos, char *nome, int id, int total)
+void alterarAluno(Aluno alunos[], char nome[], int id, int total)
 {
-    /* IMPLEMENTACOES FUTURAS
-    int igual = 0;
-    for (int i = 0; i < *totalMatriculas; i++)
-    {
-        if (matriculas[i].aluno.idAluno == id) //Se o aluno desejado estiver matriculado, nao pode ser alterado
-        {
-            printf("ATENCAO!\nO aluno que deseja alterar tem uma matricula na base de dados\nQualquer informacao deste aluno que for alterada sera alterada na matricula\n");
-            printf("Deseja continuar ? 1 - Sim / 2 - Nao\n");
-            char *confirmacao = getUserInput();
-            int valorOpcao = atoi(confirmacao);
-            free(confirmacao);
-            if (valorOpcao == 1) {
-                igual = i; //variavel para armazenar a posicao da matricula na qual o aluno desejado esta matriculado
-                continue;
-            }
-            else {
-                return;
-            }
-        }
-    }
-    */
-
     for (int i = 0; i < total; i++)
     {
         if (strcasecmp(alunos[i].nome, nome) == 0 || alunos[i].idAluno == id)
@@ -330,7 +285,7 @@ void alterarAluno(Aluno *alunos, char *nome, int id, int total)
 
                 char *opcao = getUserInput();
 
-                if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 5) {
+                if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
                     printf("Opção inválida! Digite novamente:\n");
                     free(opcao);
                     continue;
@@ -359,7 +314,7 @@ void alterarAluno(Aluno *alunos, char *nome, int id, int total)
                 case 4:
                     printf("Cidade em que nasceu: ");
                     setbuf(stdin, NULL);
-                    fgets(alunos[i].cidade, 50, stdin);
+                    fgets(alunos[i].cidade, 30, stdin);
                     alunos[i].cidade[strcspn(alunos[i].cidade, "\n")] = '\0';
                     break;
                 case 5:
@@ -375,7 +330,6 @@ void alterarAluno(Aluno *alunos, char *nome, int id, int total)
                 } else
                 {
                     printf("Aluno alterado no sistema!\n");
-                    //matriculas[igual].aluno = alunos[i];
                 }
             } while (verificarAluno(alunos, i) == 1);//Verificacao de preenchimento das informacoes
         }
@@ -390,12 +344,9 @@ void alterarAluno(Aluno *alunos, char *nome, int id, int total)
  */
 void listarAlunos(Aluno alunos[], int total)
 {
-    for (int i = 0; i <= total; i++)
+    for (int i = 0; i < total; i++)
     {
-        if (alunos[i].idAluno != 0)
-        {
-            printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
-        }
+        printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
     }
     printf("Total de alunos registrados no sistema: %d\n", total);
     printf("Aperte ENTER para voltar ao menu\n");

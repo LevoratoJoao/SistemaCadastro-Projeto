@@ -76,24 +76,19 @@ Aluno *alunosOptions(Aluno *alunos) {
     printf("TESTE");
     // CRIAR ALUNO
     FILE *arquivo = abrirArqAluno(ALUNO);
-    //FILE *arquivoMatricula = abrirArqMatricula(MATRICULA);
 
     int totalAlunos = 0;
-    //int totalMatriculas = 0;
 
     printf("Carregando...\n");
-    //fflush(stdout);
-    //usleep(900000);
-    //system("clear");
-
+    fflush(stdout);
+    usleep(900000);
+    system("clear");
     alunos = getAlunos(arquivo, &totalAlunos);
 
     char *id = NULL;
     int idAluno = 0;
     char *nome = {"\0"};
     int retorno = 0;
-
-    //matriculas = getMatricula(arquivoMatricula, &totalMatriculas);
 
     printf("------------------\n- BASE DADOS -\n------------------\n----- ALUNOS -----\n");
 
@@ -272,7 +267,6 @@ Aluno *alunosOptions(Aluno *alunos) {
 
             case 7: // Voltar ao menu inicial
                 //system("clear");
-                //free(matriculas);
                 return alunos;
                 break;
         }
@@ -302,7 +296,7 @@ Curso *cursosOptions(Curso *cursos) {
     char *nome = {"\0"};
     int retorno = 0;
 
-    printf("------------------\n- BASE DADOS -\n------------------\n----- CURSOS -----\n");
+    printf("------------------\n----- BASE DADOS -----\n------------------\n----- CURSOS -----\n");
 
     while (true) {
         printf("\nRegistro de Cursos\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir curso\n2 - Remover curso\n3 - Pesquisar\n4 - Alterar curso\n5 - Listar curso\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
@@ -484,7 +478,7 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
 
     // CRIAR MATRICULA
     FILE *arquivoCurso = abrirArqCurso(CURSO);
-    //FILE *arquivoAluno = abrirArqAluno(ALUNO);
+    FILE *arquivoAluno = abrirArqAluno(ALUNO);
     FILE *arquivo = abrirArqMatricula(MATRICULA);
 
     int totalAlunos = 0;
@@ -496,7 +490,7 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
     usleep(900000);
     system("clear");
 
-    //alunos = getAlunos(arquivoAluno, &totalAlunos, alunos);
+    alunos = getAlunos(arquivoAluno, &totalAlunos);
     cursos = getCursos(arquivoCurso, &totalCursos);
     matriculas = getMatricula(arquivo, &totalMatriculas);
 

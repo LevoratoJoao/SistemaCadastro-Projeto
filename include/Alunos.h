@@ -1,6 +1,5 @@
 #ifndef ALUNOS_H
 #define ALUNOS_H
-#include <stdio.h>
 
 typedef struct
 {
@@ -14,7 +13,7 @@ typedef struct
     int idAluno;
     char nome[51];
     int idade;
-    char cidade[51];
+    char cidade[31];
     Data nascimento;
 } Aluno;
 
