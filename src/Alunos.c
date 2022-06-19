@@ -49,6 +49,28 @@ Aluno *getAlunos(FILE *arquivo, int *total) {
         if (cont % 10 == 0) { // se o contador for divisivel por 10 realoca o vetor
             alunos = (Aluno*) realloc(alunos, (cont + 10) * sizeof(Aluno));
         }
+        tmp = fread(&alunos[cont], sizeof(Aluno), 1, arquivo); // le o arquivo e armazena os dados em um vetor de cursos
+        if (tmp == 0) { // Diminui o contador pois nao há mais cursos no arquivo, isso ocorre por feof pega uma linha a mais do arquivo entao total de cursos no arquivo viria com um a mais o que daria problemas na exibicao e insercao de novos
+            cont--;
+        }
+        cont++;
+    }
+    for (int i = cont; i <= cont + MAXIMO; i++) { // Indica que as posições estão vazias
+        alunos[i].idAluno = 0;
+    }
+    *total = cont;
+    fclose(arquivo);
+    return alunos;
+}
+/*
+Aluno *getAlunos(FILE *arquivo, int *total) {
+    Aluno *alunos = NULL;
+    int cont = 0;
+    int tmp;
+    while (!feof(arquivo)) { // enquanto não chegar no fim do arquivo
+        if (cont % 10 == 0) { // se o contador for divisivel por 10 realoca o vetor
+            alunos = (Aluno*) realloc(alunos, (cont + 10) * sizeof(Aluno));
+        }
         tmp = fread(&alunos[cont], sizeof(Aluno), 1, arquivo); // le o arquivo e armazena os dados em um vetor de alunos
         if (tmp == 0) { // Diminui o contador pois nao há mais alunos no arquivo, isso ocorre por feof pega uma linha a mais do arquivo entao total de alunos no arquivo viria com um a mais o que daria problemas na exibicao e insercao de novos
             cont--;
@@ -62,6 +84,7 @@ Aluno *getAlunos(FILE *arquivo, int *total) {
     fclose(arquivo);
     return alunos;
 }
+*/
 
 /**
  * @brief If() -- verifica se os dados do aluno foram inseridos corretamente

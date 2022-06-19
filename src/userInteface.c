@@ -82,16 +82,17 @@ Aluno *alunosOptions(Aluno *alunos) {
     //int totalMatriculas = 0;
 
     printf("Carregando...\n");
-    fflush(stdout);
-    usleep(900000);
-    system("clear");
+    //fflush(stdout);
+    //usleep(900000);
+    //system("clear");
+
+    alunos = getAlunos(arquivo, &totalAlunos);
 
     char *id = NULL;
     int idAluno = 0;
     char *nome = {"\0"};
     int retorno = 0;
 
-    alunos = getAlunos(arquivo, &totalAlunos);
     //matriculas = getMatricula(arquivoMatricula, &totalMatriculas);
 
     printf("------------------\n- BASE DADOS -\n------------------\n----- ALUNOS -----\n");
@@ -483,23 +484,24 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
 
     // CRIAR MATRICULA
     FILE *arquivoCurso = abrirArqCurso(CURSO);
-    FILE *arquivoAluno = abrirArqAluno(ALUNO);
+    //FILE *arquivoAluno = abrirArqAluno(ALUNO);
     FILE *arquivo = abrirArqMatricula(MATRICULA);
 
     int totalAlunos = 0;
     int totalMatriculas = 0;
     int totalCursos = 0;
-    int idMatricula = 0;
-    int retorno = 0;
 
     printf("Carregando...\n");
     fflush(stdout);
     usleep(900000);
     system("clear");
 
-    alunos = getAlunos(arquivoAluno, &totalAlunos);
+    //alunos = getAlunos(arquivoAluno, &totalAlunos, alunos);
     cursos = getCursos(arquivoCurso, &totalCursos);
     matriculas = getMatricula(arquivo, &totalMatriculas);
+
+    int idMatricula = 0;
+    int retorno = 0;
 
     printf("----------------------\n- BASE DADOS -\n----------------------\n----- MATRICULAS -----\n");
 
