@@ -13,14 +13,14 @@ typedef struct
     int idAluno;
     char nome[51];
     int idade;
-    char cidade[31];
+    char cidade[51];
     Data nascimento;
 } Aluno;
 
 FILE *abrirArqAluno(char *nome);
 Aluno *getAlunos(FILE *arquivo, int *total);
 Aluno *inserirAluno(Aluno *alunos, int *total);
-int removerAluno(Aluno *alunos, char *nome, int id, int total);
+int removerAluno(Aluno *alunos, char *nome, int id, int *total);
 int pesquisarAluno(Aluno *alunos, char *nome, int id, int total);
 void alterarAluno(Aluno *alunos, char *nome, int id, int total);
 void listarAlunos(Aluno *alunos, int total);

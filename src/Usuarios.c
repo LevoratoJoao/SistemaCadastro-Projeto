@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "Usuarios.h"
 #define MAX 10
 
@@ -48,7 +49,7 @@ User *getUsers(FILE *arquivo, int *total)
         fread(&usuarios[cont], sizeof(User), 1, arquivo);
 
         if (strcmp(usuarios[0].nome, "\0") == 0) { // se o nome da primeira posicao lida (primeira linha do arquivo) for vazio indica que nao há usuarios cadastrados no sistema entao é feito logo um cadastro e armaazenado no arquivo
-            printf("Ola, seja bem vindo :)\n");
+            printf("\nOla, seja bem vindo :)\n");
             printf("Digite nome de usuario: \n");
             fgets(usuarios[cont].nome, 30, stdin);
             usuarios[cont].nome[strcspn(usuarios[cont].nome, "\n")] = '\0';
@@ -107,8 +108,8 @@ User *cadastrarUser(User *usuarios, int *total)
         }
     }
     //preenchimento do usuario
-    printf("CADASTRO USUARIOS\n");
-    printf("Ola, seja bem vindo ao sistema :)\n");
+    printf("- CADASTRO USUARIOS ----------------------\n");
+    printf("\nOla, seja bem vindo ao sistema :)\n");
     printf("Digite nome de usuario: \n");
     fgets(usuarios[indice].nome, 30, stdin);
     usuarios[indice].nome[strcspn(usuarios[indice].nome, "\n")] = '\0';
@@ -130,6 +131,7 @@ User *cadastrarUser(User *usuarios, int *total)
 User *criptografarSenha(User *usuarios, int indice)
 {
     printf("Criptografando senha...\n");
+    usleep(100000);
     for (long unsigned int i = 0; i < strlen(usuarios[indice].senha); i++)
     {
         usuarios[indice].senha[i] = usuarios[indice].senha[i] + 2; // criptografa a senha
@@ -146,7 +148,8 @@ User *criptografarSenha(User *usuarios, int indice)
  */
 int logarUser(User usuarios[], int *total)
 {
-    printf("LOGIN\n");
+    system("clear");
+    printf("- LOGIN ----------------------\n");
     char nomeAux[31];
     char senhaAux[31];
     int tentativas = 0;
@@ -172,6 +175,9 @@ int logarUser(User usuarios[], int *total)
                 if (strcmp(senhaAux, usuarios[i].senha) == 0) //verifica se a senha auxiliar e senha do usuario da posicao sao iguais
                 {
                     printf("Login realizado com sucesso!\n");
+                    printf("Carregando...\n");
+                    fflush(stdout);
+                    usleep(2000000);
                     return 1;
                 }
             }

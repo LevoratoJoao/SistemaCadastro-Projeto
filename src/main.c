@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <Usuarios.h>
 #include <Alunos.h>
@@ -49,6 +50,7 @@ int main()
 
             switch(valorOpcao) {
                 case 1: // Acessar base de dados
+                    usleep(900000);
                     system("clear");
                     userInterface();
                     break;
@@ -58,6 +60,7 @@ int main()
                     break;
                 case 3: // Sair
                     printf("Saindo do sistema...\n");
+                    usleep(1000000);
                     free(usuario);
                     return EXIT_SUCCESS;
 
