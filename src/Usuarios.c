@@ -2,7 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Usuarios.h"
+#include <unistd.h>
+
 #define MAX 10
+#define RED "\x1B[31m"
+#define GRN "\x1B[32m"
+#define YEL "\x1B[33m"
+#define CYN "\x1B[36m"
+#define RESET "\x1B[0m"
+#define BLU "\x1B[34m"
 
 User *criptografarSenha(User *usuarios, int indice);
 
@@ -18,11 +26,11 @@ FILE *abrirArqUser(char *nome)
     if (arq == NULL)
     {
         //se o arquivo nao existe ele cria um novo
-        printf("Arquivo nao esta no sistema!\nCriando arquivo...\n");
+        printf(YEL"Arquivo nao esta no sistema!\nCriando arquivo...\n");
         arq = fopen(nome, "w+b");
         if (arq == NULL)
         {
-            printf("Erro ao abrir arquivo!!!\n");
+            printf(RED"Erro ao abrir arquivo!!!\n");
             return NULL;
         }
     }
@@ -48,7 +56,7 @@ User *getUsers(FILE *arquivo, int *total)
         fread(&usuarios[cont], sizeof(User), 1, arquivo);
 
         if (strcmp(usuarios[0].nome, "\0") == 0) { // se o nome da primeira posicao lida (primeira linha do arquivo) for vazio indica que nao há usuarios cadastrados no sistema entao é feito logo um cadastro e armaazenado no arquivo
-            printf("Ola, seja bem vindo :)\n");
+            printf(CYN"Ola, seja bem vindo :)\n");
             printf("Digite nome de usuario: \n");
             fgets(usuarios[cont].nome, 30, stdin);
             usuarios[cont].nome[strcspn(usuarios[cont].nome, "\n")] = '\0';
@@ -107,8 +115,9 @@ User *cadastrarUser(User *usuarios, int *total)
         }
     }
     //preenchimento do usuario
-    printf("CADASTRO USUARIOS\n");
-    printf("Ola, seja bem vindo ao sistema :)\n");
+    system("clear");
+    printf(BLU"- CADASTRO USUARIOS -------------\n");
+    printf(CYN"Ola, seja bem vindo ao sistema :)\n");
     printf("Digite nome de usuario: \n");
     fgets(usuarios[indice].nome, 30, stdin);
     usuarios[indice].nome[strcspn(usuarios[indice].nome, "\n")] = '\0';
@@ -146,14 +155,15 @@ User *criptografarSenha(User *usuarios, int indice)
  */
 int logarUser(User usuarios[], int *total)
 {
-    printf("LOGIN\n");
+    system("clear");
+    printf(BLU"- LOGIN -------------\n");
     char nomeAux[31];
     char senhaAux[31];
     int tentativas = 0;
 
     while (tentativas < 3) // loop que realiza o login ate que o usuario digite 3 vezes a senha incorreta
     {
-        printf("Digite nome usuarios: \n");
+        printf(CYN"Digite nome usuarios: \n");
         setbuf(stdin, NULL);
         fgets(nomeAux, 30, stdin);
         nomeAux[strcspn(nomeAux, "\n")] = '\0';
@@ -171,16 +181,18 @@ int logarUser(User usuarios[], int *total)
             {
                 if (strcmp(senhaAux, usuarios[i].senha) == 0) //verifica se a senha auxiliar e senha do usuario da posicao sao iguais
                 {
-                    printf("Login realizado com sucesso!\n");
+                    printf(GRN"Login realizado com sucesso!\n");
+                    printf("...\n");
+                    fflush(stdout);
+                    usleep(900000);
                     return 1;
                 }
             }
         }
-        printf("Nome ou senha de usuarios incorretos\n");
+        printf(YEL"Nome ou senha de usuarios incorretos\n");
         tentativas++;
     }
-    printf("ATENCAO...\nVoce excedeu o numero de tentativas\n");
-    printf("Tentativas: %i\n", tentativas);
-    printf("Login falhou\n");
+    printf(RED"ATENCAO...\nVoce excedeu o numero de tentativas\n");
+    printf(RED"Login falhou\n");
     return 0;
 }

@@ -2,10 +2,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 #include <Alunos.h>
 #include <utils.h>
 
 #define MAX 10
+#define RED "\x1B[31m"
+#define GRN "\x1B[32m"
+#define YEL "\x1B[33m"
+#define CYN "\x1B[36m"
+#define RESET "\x1B[0m"
+#define BLU "\x1B[34m"
 
 /**
  * @brief Abre o arquivo que estao salvos as informacoes dos alunos
@@ -20,16 +27,16 @@ FILE *abrirArqAluno(char *nome)
     if (arq == NULL)
     {
         //se o arquivo nao existe ele cria um novo
-        printf("Arquivo nao esta no sistema!\nCriando arquivo...\n");
+        printf(YEL"Arquivo nao esta no sistema!\nCriando arquivo...\n");
         arq = fopen(nome, "w+b");
         if (arq == NULL)
         {
-            printf("Erro ao abrir arquivo!!!\n");
+            printf(RED"Erro ao abrir arquivo!!!\n");
             // exit(1);
             return NULL;
         }
     }
-    printf("Arquivo aberto\n");
+    printf(GRN"Arquivo aberto\n");
 
     return arq;
 }
@@ -112,20 +119,20 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
         }
         if (indice == *total + MAX) //Se não houver espaço disponível realoca o vetor
         {
-            printf("Nao ha espaco disponivel...\nRealocando...\n");
+            printf(RED"Nao ha espaco disponivel...\nRealocando...\n");
             int realocador = MAX;
             realocador += 10;
             alunos = (Aluno*) realloc(alunos, realocador * sizeof(Aluno)); //realoca alunos para preencher mais
             if (alunos == NULL)
             {
-                printf("Erro: memoria insuficiente\n");
+                printf(RED"Erro: memoria insuficiente\n");
                 return NULL;//return -1;
             }
         }
 
         do {
             alunos[indice].idAluno = indice + 1;
-            printf("\nAluno %i\n", indice + 1);
+            printf(CYN"\nAluno %i\n", indice + 1);
             setbuf(stdin, NULL);
             printf("Nome: ");
             fgets(alunos[indice].nome, 50, stdin);
@@ -142,15 +149,15 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
             alunos[indice].cidade[strcspn(alunos[indice].cidade, "\n")] = '\0';
             setbuf(stdin, NULL);
             if (verificarAluno(alunos, indice) == 1) { //verifica se os dados foram preenchidos corretamente
-                printf("Erro!!! Preencha novamente\n");
+                printf(RED"Erro!!! Preencha novamente\n");
             }
             else {
-                printf("Aluno cadastrado no sistema!\n");
+                printf(GRN"Aluno cadastrado no sistema!\n");
                 (*total)++;
 
                 printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[indice].idAluno, alunos[indice].nome, alunos[indice].idade, alunos[indice].nascimento.dia, alunos[indice].nascimento.mes, alunos[indice].nascimento.ano, alunos[indice].cidade);//Mostra as informacoes atuais do aluno
 
-                printf("Deseja cadastrar outro aluno? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro aluno
+                printf(CYN"Deseja cadastrar outro aluno? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro aluno
 
                 confirma = getUserInput();
                 char valorOpcao = atoi(confirma);
@@ -164,8 +171,8 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
                     return alunos;
                 } else if (valorOpcao != 1)
                 {
-                    printf("Erro!!!\nDigite novamente\n");
-                    printf("Deseja cadastrar outro aluno? (1 - S/ 2 - N): ");
+                    printf(YEL"Erro!!!\nDigite novamente\n");
+                    printf(CYN"Deseja cadastrar outro aluno? (1 - S/ 2 - N): ");
                     confirma = getUserInput();
                     printf("%s\n", confirma);
                     valorOpcao = atoi(confirma);
@@ -212,23 +219,23 @@ int removerAluno(Aluno alunos[], char nome[], int id, int *total)
     {
         if (strcasecmp(alunos[i].nome, nome) == 0 || alunos[i].idAluno == id)//Busca o aluno desejado
         {
-            printf("As seguintes informacoes do aluno serao apagadas do registro:\n");
-            printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
+            printf(YEL"As seguintes informacoes do aluno serao apagadas do registro:\n");
+            printf(CYN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
             printf("Deseja continuar ? 1 - Sim / 2 - Nao\n");
             setbuf(stdin, NULL);
             confirmacao = getUserInput();
             char valorOpcao = atoi(confirmacao);
             free(confirmacao);//Confirmacao para excluir
             if (valorOpcao == 2) {
-                printf("Operacao finalizada\n");
-                printf("Aperte ENTER para voltar ao menu\n");
+                printf(GRN"Operacao finalizada\n");
+                printf(CYN"Aperte ENTER para voltar ao menu\n");
                 free(getUserInput());
                 return 3;
 
             }
             else if (valorOpcao != 1) {
-                printf("Erro!!!\nDigite novamente\n");
-                printf("Deseja continuar ? 1 - Sim / 2 - Nao\n");
+                printf(YEL"Erro!!!\nDigite novamente\n");
+                printf(CYN"Deseja continuar ? 1 - Sim / 2 - Nao\n");
                 confirmacao = getUserInput();
                 valorOpcao = atoi(confirmacao);
                 free(confirmacao);
@@ -257,7 +264,7 @@ int pesquisarAluno(Aluno *alunos, char *nome, int id, int total)
     {
         if (strcasecmp(alunos[i].nome, nome) == 0 || alunos[i].idAluno == id)
         {
-            printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
+            printf(CYN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
             return 0;
         }
     }
@@ -274,13 +281,14 @@ int pesquisarAluno(Aluno *alunos, char *nome, int id, int total)
  */
 void alterarAluno(Aluno alunos[], char nome[], int id, int total)
 {
+    system("clear");
     for (int i = 0; i < total; i++)
     {
         if (strcasecmp(alunos[i].nome, nome) == 0 || alunos[i].idAluno == id)
         {
             do
             {
-                printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);//Mostra as informacoes atuais do aluno
+                printf(CYN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);//Mostra as informacoes atuais do aluno
                 printf("Qual informacao deseja alterar do registro do aluno ?\n1 - Nome\n2 - Idade\n3 - Nascimento\n4 - Cidade\n5 - Cancelar\n");//Opcoes de alteracao (ID nao pode ser alterado)
 
                 char *opcao = getUserInput();
@@ -346,7 +354,7 @@ void listarAlunos(Aluno alunos[], int total)
 {
     for (int i = 0; i < total; i++)
     {
-        printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
+        printf(CYN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
     }
     printf("Total de alunos registrados no sistema: %d\n", total);
     printf("Aperte ENTER para voltar ao menu\n");
@@ -367,7 +375,7 @@ FILE *salvarArqAluno(FILE *arq, Aluno *alunos, int *total)
     char nome[31] = {"./dataAluno.dat"};
     arq = fopen(nome, "r+b");
 
-    printf("Salvando os dados...\nNao feche o programa!\n");
+    printf(YEL"Salvando os dados...\nNao feche o programa!\n");
     for (int i = 0; i < *total; i++)
     {
         fwrite(&alunos[i], sizeof(Aluno), 1, arq);
@@ -375,10 +383,11 @@ FILE *salvarArqAluno(FILE *arq, Aluno *alunos, int *total)
     aux = ftell(arq);
     if (aux == 0)//Verifica se os dados foram salvos corretamente, se o arquivo estiver vazio eles nao foram salvos
     {
-        printf("Erro ao salvar! Tente novamente\n");
+        printf(RED"Erro ao salvar! Tente novamente\n");
     } else
     {
-        printf("Dados salvos com sucesso!\n");
+        printf(GRN"Dados salvos com sucesso!\n");
+        usleep(5000000);
     }
 
     return arq;

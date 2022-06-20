@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <Usuarios.h>
 #include <Alunos.h>
@@ -21,6 +22,12 @@
 
 #define USER "./dataUser.dat"
 #define MAX 10
+#define RED "\x1B[31m"
+#define GRN "\x1B[32m"
+#define YEL "\x1B[33m"
+#define CYN "\x1B[36m"
+#define RESET "\x1B[0m"
+#define BLU "\x1B[34m"
 
 int main()
 {
@@ -35,8 +42,8 @@ int main()
         while (1)
         {
             system("clear");
-            printf("----------------------\n- SISTEMA DE ESCOLAR -\n----------------------\n");
-            printf("1 - Acessar base de dados\n2 - Cadastrar novo usuario\n3 - Sair\n");
+            printf(BLU "----------------------\n- SISTEMA DE ESCOLAR -\n----------------------\n");
+            printf(CYN"1 - Acessar base de dados\n2 - Cadastrar novo usuario\n3 - Sair\n");
             opcao = getUserInput();
 
             if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 5) {
@@ -57,7 +64,7 @@ int main()
                     usuario = cadastrarUser(usuario, &totalUsuarios);
                     break;
                 case 3: // Sair
-                    printf("Saindo do sistema...\n");
+                    printf(GRN"Saindo do sistema...\n");
                     free(usuario);
                     return EXIT_SUCCESS;
 

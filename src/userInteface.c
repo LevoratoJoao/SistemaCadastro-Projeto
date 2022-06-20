@@ -14,6 +14,12 @@
 #define CURSO "./dataCurso.dat"
 #define MATRICULA "./dataMatricula.dat"
 #define MAX 10
+#define RED "\x1B[31m"
+#define GRN "\x1B[32m"
+#define YEL "\x1B[33m"
+#define CYN "\x1B[36m"
+#define BLU "\x1B[34m"
+#define RESET "\x1B[0m"
 
 Aluno *alunosOptions(Aluno *alunos);
 Curso *cursosOptions(Curso *cursos);
@@ -26,15 +32,16 @@ void userInterface() {
     char *opcao = NULL;
 
     while (true) {
-        system("clear");
-        printf("----------------------\n- SISTEMA DE ESCOLAR -\n----------------------\n");
+        printf(BLU"----------------------\n- SISTEMA DE ESCOLAR -\n----------------------\n");
         printf("---- MENU INICIAL ----\n");
-        printf("- Operacoes:\n- Digite o numero da base de dados que deseja acessar:\n- 1 . Alunos\n- 2 . Cursos\n- 3 . Matriculas\n- 4 . Salvar operacoes\n- 5 . Sair do sistema\n----------------------\n");
+        printf(CYN"- Digite o numero da base de dados que deseja acessar:\n- 1 . Alunos\n- 2 . Cursos\n- 3 . Matriculas\n- 4 . Salvar operacoes\n- 5 . Sair do sistema\n----------------------\n");
         printf("Digite sua opção:\n");
         opcao = getUserInput();
 
         if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 5) {
-            printf("Opção inválida! Digite novamente:\n");
+            printf(YEL"Opção inválida! Digite novamente:\n");
+            fflush(stdout);
+            usleep(900000);
             free(opcao);
             continue;
         }
@@ -73,13 +80,12 @@ void userInterface() {
 
 Aluno *alunosOptions(Aluno *alunos) {
 
-    printf("TESTE");
     // CRIAR ALUNO
     FILE *arquivo = abrirArqAluno(ALUNO);
 
     int totalAlunos = 0;
 
-    printf("Carregando...\n");
+    printf(GRN"Carregando...\n");
     fflush(stdout);
     usleep(900000);
     system("clear");
@@ -90,14 +96,16 @@ Aluno *alunosOptions(Aluno *alunos) {
     char *nome = {"\0"};
     int retorno = 0;
 
-    printf("------------------\n- BASE DADOS -\n------------------\n----- ALUNOS -----\n");
+    printf(BLU"------------------\n--- BASE DADOS ---\n------------------\n----- ALUNOS -----\n");
 
     while (true) {
-        printf("- Registro de Alunos\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir aluno\n2 - Remover aluno\n3 - Pesquisar\n4 - Alterar aluno\n5 - Listar alunos\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
+        printf(BLU"Registro de Alunos"CYN"\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir aluno\n2 - Remover aluno\n3 - Pesquisar\n4 - Alterar aluno\n5 - Listar alunos\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
         char *opcao = getUserInput();
 
         if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
-            printf("Opção inválida! Digite novamente:\n");
+            printf(YEL"Opção inválida! Digite novamente:\n");
+            fflush(stdout);
+            usleep(900000);
             free(opcao);
             continue;
         }
@@ -108,25 +116,25 @@ Aluno *alunosOptions(Aluno *alunos) {
         switch (valorOpcao) {
             case 1: // Inserir aluno
                 if (alunos == NULL) {
-                    printf("Erro ao alocar memória!\n");
+                    printf(YEL"Erro ao alocar memória!\n");
                 }
                 //INSERIR O ALUNO
                 alunos = inserirAluno(alunos, &totalAlunos);
-                printf("TOTAL ALUNOS: %d\n", totalAlunos);
+                printf(CYN"TOTAL ALUNOS: %d\n", totalAlunos);
                 break;
 
             case 2: // Remover aluno
                 printf("Remover aluno por:\n1 - nome\n2 - ID\n");
                 opcao = getUserInput();
                 if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 2) {
-                    printf("Opção inválida! Digite novamente:\n");
+                    printf(YEL"Opção inválida! Digite novamente:\n");
                     free(opcao);
                     continue;
                 }
                 valorOpcao = atoi(opcao);
                 free(opcao);
                 if (valorOpcao == 1) {
-                    printf("Digite o nome do aluno a ser removido:\n");
+                    printf(CYN"Digite o nome do aluno a ser removido:\n");
                     nome = getUserInput();
                     printf("Nome: %s\n", nome);
 
@@ -135,21 +143,21 @@ Aluno *alunosOptions(Aluno *alunos) {
                     if (retorno == 1) {
 
                         free(nome);
-                        printf("Aluno nao encontrado\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(YEL"Aluno nao encontrado\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
 
                     } else if (retorno == 0){
 
                         free(nome);
-                        printf("Aluno removido do sistema!\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(GRN"Aluno removido do sistema!\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
 
                     } else {
 
-                        printf("Operacao finalizada\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(GRN"Operacao finalizada\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
 
                     }
@@ -161,19 +169,19 @@ Aluno *alunosOptions(Aluno *alunos) {
                     retorno = removerAluno(alunos, nome, idAluno, &totalAlunos);
                     if (retorno == 1) {
 
-                        printf("Aluno nao encontrado\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(YEL"Aluno nao encontrado\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
 
                     } else if (retorno == 0) {
 
-                        printf("Aluno removido do sistema!\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(GRN"Aluno removido do sistema!\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
 
                     } else {
-                        printf("Operacao finalizada\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(GRN"Operacao finalizada\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     }
                 }
@@ -183,22 +191,22 @@ Aluno *alunosOptions(Aluno *alunos) {
                 printf("Pesquisar aluno por:\n1 - nome\n2 - ID\n");
                 opcao = getUserInput();
                 if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 2) {
-                    printf("Opção inválida! Digite novamente:\n");
+                    printf(YEL"Opção inválida! Digite novamente:\n");
                     free(opcao);
                     continue;
                 }
                 valorOpcao = atoi(opcao);
                 free(opcao);
                 if (valorOpcao == 1) {
-                    printf("Digite o nome do aluno a ser pesquisado:\n");
+                    printf(CYN"Digite o nome do aluno a ser pesquisado:\n");
                     nome = getUserInput();
                     printf("Nome: %s\n", nome);
                     //PESQUISAR ALUNO POR NOME
                     retorno = pesquisarAluno(alunos, nome, idAluno, totalAlunos);
                     if (retorno == 1) {
                         free(nome);
-                        printf("Aluno nao encontrado\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(YEL"Aluno nao encontrado\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     } else {
                         free(nome);
@@ -213,11 +221,11 @@ Aluno *alunosOptions(Aluno *alunos) {
                     //PESQUISAR ALUNO POR ID
                     retorno = pesquisarAluno(alunos, nome, idAluno, totalAlunos);
                     if (retorno == 1) {
-                        printf("Aluno nao encontrado\n");
+                        printf(YEL"Aluno nao encontrado\n");
                         printf("Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     } else {
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     }
                 }
@@ -227,22 +235,21 @@ Aluno *alunosOptions(Aluno *alunos) {
                 printf("Alterar aluno por:\n1 - nome\n2 - ID\n");
                 opcao = getUserInput();
                 if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 2) {
-                    printf("Opção inválida! Digite novamente:\n");
+                    printf(YEL"Opção inválida! Digite novamente:\n");
                     free(opcao);
                     continue;
                 }
                 valorOpcao = atoi(opcao);
                 free(opcao);
                 if (valorOpcao == 1) {
-                    printf("Digite o nome do aluno a ser alterado:\n");
+                    printf(CYN"Digite o nome do aluno a ser alterado:\n");
                     nome = getUserInput();
                     printf("Nome: %s\n", nome);
 
                     //ALTERAR ALUNO POR NOME
                     alterarAluno(alunos, nome, idAluno, totalAlunos); //Chamada da função alterarAluno
                     free(nome);
-                    printf("Aperte ENTER para voltar ao menu\n");
-                    free(getUserInput());
+                    sleep(1);
                 } else {
                     printf("Digite o ID do aluno a ser alterado:\n");
                     id = getUserInput();
@@ -251,8 +258,7 @@ Aluno *alunosOptions(Aluno *alunos) {
 
                     //ALTERAR ALUNO POR ID
                     alterarAluno(alunos, nome, idAluno, totalAlunos); //Chamada da função alterarAluno
-                    printf("Aperte ENTER para voltar ao menu\n");
-                    free(getUserInput());
+                    sleep(1);
                 }
                 break;
 
@@ -296,14 +302,14 @@ Curso *cursosOptions(Curso *cursos) {
     char *nome = {"\0"};
     int retorno = 0;
 
-    printf("------------------\n----- BASE DADOS -----\n------------------\n----- CURSOS -----\n");
+    printf(BLU"------------------\n----- BASE DADOS -----\n------------------\n----- CURSOS -----\n");
 
     while (true) {
-        printf("\nRegistro de Cursos\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir curso\n2 - Remover curso\n3 - Pesquisar\n4 - Alterar curso\n5 - Listar curso\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
+        printf(BLU"\nRegistro de Cursos"CYN"\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir curso\n2 - Remover curso\n3 - Pesquisar\n4 - Alterar curso\n5 - Listar curso\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
         char *opcao = getUserInput();
 
         if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
-            printf("Opção inválida! Digite novamente:\n");
+            printf(YEL"Opção inválida! Digite novamente:\n");
             free(opcao);
             continue;
         }
@@ -314,25 +320,25 @@ Curso *cursosOptions(Curso *cursos) {
         switch (valorOpcao) {
             case 1: // Inserir aluno
                 if (cursos == NULL) {
-                    printf("Erro ao alocar memória!\n");
+                    printf(RED"Erro ao alocar memória!\n");
                 }
                 //INSERIR O CURSO
                 cursos = inserirCurso(cursos, &totalCursos);
-                printf("TOTAL CURSOS: %d\n", totalCursos);
+                printf(CYN"TOTAL CURSOS: %d\n", totalCursos);
                 break;
 
             case 2: // Remover cursos
                 printf("Remover curso por:\n1 - nome\n2 - ID\n");
                 opcao = getUserInput();
                 if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 2) {
-                    printf("Opção inválida! Digite novamente:\n");
+                    printf(YEL"Opção inválida! Digite novamente:\n");
                     free(opcao);
                     continue;
                 }
                 valorOpcao = atoi(opcao);
                 free(opcao);
                 if (valorOpcao == 1) {
-                    printf("Digite o nome do curso a ser removido:\n");
+                    printf(CYN"Digite o nome do curso a ser removido:\n");
                     nome = getUserInput();
                     printf("Nome: %s\n", nome);
 
@@ -341,13 +347,13 @@ Curso *cursosOptions(Curso *cursos) {
                     if (retorno == 1) {
 
                         free(nome);
-                        printf("Curso nao encontrado\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(YEL"Curso nao encontrado\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
 
                     } else if (retorno == 0) {
                         free(nome);
-                        printf("Curso removido do sistema!\n");
+                        printf(GRN"Curso removido do sistema!\n");
                         printf("Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     } else {
@@ -363,16 +369,16 @@ Curso *cursosOptions(Curso *cursos) {
                     //REMOVER CURSO POR ID
                     retorno = removerCurso(cursos, nome, idCurso, totalCursos);
                     if (retorno == 1) {
-                        printf("Curso nao encontrado\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(YEL"Curso nao encontrado\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     } else if (retorno == 0) {
-                        printf("Curso removido do sistema!\n");
+                        printf(GRN"Curso removido do sistema!\n");
                         printf("Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     } else {
-                        printf("Operacao finalizada\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(GRN"Operacao finalizada\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     }
                 }
@@ -382,22 +388,22 @@ Curso *cursosOptions(Curso *cursos) {
                 printf("Pesquisar curso por:\n1 - nome\n2 - ID\n");
                 opcao = getUserInput();
                 if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 2) {
-                    printf("Opção inválida! Digite novamente:\n");
+                    printf(YEL"Opção inválida! Digite novamente:\n");
                     free(opcao);
                     continue;
                 }
                 valorOpcao = atoi(opcao);
                 free(opcao);
                 if (valorOpcao == 1) {
-                    printf("Digite o nome do curso a ser pesquisado:\n");
+                    printf(CYN"Digite o nome do curso a ser pesquisado:\n");
                     nome = getUserInput();
                     printf("Nome: %s\n", nome);
 
                     //PESQUISAR CURSO POR NOME
                     if (pesquisarCurso(cursos, nome, idCurso, totalCursos) == 1) {
-                        printf("Curso nao encontrado\n");
+                        printf(YEL"Curso nao encontrado\n");
                         free(nome);
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     } else {
                         printf("Aperte ENTER para voltar ao menu\n");
@@ -412,8 +418,8 @@ Curso *cursosOptions(Curso *cursos) {
 
                     //PESQUISAR CURSO POR ID
                     if (pesquisarCurso(cursos, nome, idCurso, totalCursos) == 1) {
-                        printf("Curso nao encontrado\n");
-                        printf("Aperte ENTER para voltar ao menu\n");
+                        printf(YEL"Curso nao encontrado\n");
+                        printf(CYN"Aperte ENTER para voltar ao menu\n");
                         free(getUserInput());
                     } else {
                         printf("Aperte ENTER para voltar ao menu\n");
@@ -426,14 +432,14 @@ Curso *cursosOptions(Curso *cursos) {
                 printf("Alterar curso por:\n1 - nome\n2 - ID\n");
                 opcao = getUserInput();
                 if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 2) {
-                    printf("Opção inválida! Digite novamente:\n");
+                    printf(YEL"Opção inválida! Digite novamente:\n");
                     free(opcao);
                     continue;
                 }
                 valorOpcao = atoi(opcao);
                 free(opcao);
                 if (valorOpcao == 1) {
-                    printf("Digite o nome do curso a ser alterado:\n");
+                    printf(CYN"Digite o nome do curso a ser alterado:\n");
                     nome = getUserInput();
                     printf("Nome: %s\n", nome);
 
@@ -497,14 +503,14 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
     int idMatricula = 0;
     int retorno = 0;
 
-    printf("----------------------\n- BASE DADOS -\n----------------------\n----- MATRICULAS -----\n");
+    printf(BLU"----------------------\n----- BASE DADOS -----\n----------------------\n----- MATRICULAS -----\n");
 
     while (true) {
-        printf("\nRegistro de Matriculas\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir matricula\n2 - Excluir matricula\n3 - Pesquisar\n4 - Alterar matricula\n5 - Listar matriculas\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
+        printf(BLU"Registro de Matriculas"CYN"\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir matricula\n2 - Excluir matricula\n3 - Pesquisar\n4 - Alterar matricula\n5 - Listar matriculas\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
         char *opcao = getUserInput();
 
         if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
-            printf("Opção inválida! Digite novamente:\n");
+            printf(YEL"Opção inválida! Digite novamente:\n");
             free(opcao);
             continue;
         }
@@ -515,11 +521,11 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
         switch (valorOpcao) {
             case 1: // Inserir matricula
                 if (matriculas == NULL) {
-                    printf("Erro ao alocar memória!\n");
+                    printf(RED"Erro ao alocar memória!\n");
                 }
                 //INSERIR O MATRICULA
                 matriculas = inserirMatricula(matriculas,  alunos, cursos, &totalMatriculas, &totalAlunos, &totalCursos);
-                printf("TOTAL MATRICULAS: %d\n", totalMatriculas);
+                printf(CYN"TOTAL MATRICULAS: %d\n", totalMatriculas);
                 break;
 
             case 2: // Remover matricula
@@ -531,8 +537,8 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                 //REMOVER MATRICULA
                 retorno = removerMatricula(matriculas, idMatricula, &totalAlunos);
                 if (retorno == 1) {
-                    printf("Matricula nao encontrado\n");
-                    printf("Aperte ENTER para voltar ao menu\n");
+                    printf(YEL"Matricula nao encontrado\n");
+                    printf(CYN"Aperte ENTER para voltar ao menu\n");
                     free(getUserInput());
 
                 } else if (retorno == 0) {
@@ -541,14 +547,14 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                     free(getUserInput());
 
                 } else {
-                    printf("Operacao finalizada\n");
+                    printf(GRN"Operacao finalizada\n");
                     printf("Aperte ENTER para voltar ao menu\n");
                     free(getUserInput());
                 }
                 break;
 
             case 3: // Pesquisar
-                printf("Digite o ID da matricula a ser pesquisada:\n");
+                printf(CYN"Digite o ID da matricula a ser pesquisada:\n");
                 opcao = getUserInput();
                 idMatricula = atoi(opcao);
                 free(opcao);
@@ -556,8 +562,8 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                 //PESQUISAR MATRICULA POR ID
                 retorno = pesquisarMatricula(matriculas, idMatricula, totalAlunos);
                 if (retorno == 1) {
-                    printf("Aluno nao encontrado\n");
-                    printf("Aperte ENTER para voltar ao menu\n");
+                    printf(YEL"Matricula nao encontrada\n");
+                    printf(CYN"Aperte ENTER para voltar ao menu\n");
                     free(getUserInput());
                 } else {
                     printf("Aperte ENTER para voltar ao menu\n");

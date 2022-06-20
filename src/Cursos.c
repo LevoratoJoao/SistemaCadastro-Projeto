@@ -6,6 +6,12 @@
 #include <utils.h>
 
 #define MAX 10
+#define RED "\x1B[31m"
+#define GRN "\x1B[32m"
+#define YEL "\x1B[33m"
+#define CYN "\x1B[36m"
+#define RESET "\x1B[0m"
+#define BLU "\x1B[34m"
 
 /**
  * @brief Abre o arquivo que estao salvos as informacoes dos cursos
@@ -20,16 +26,16 @@ FILE *abrirArqCurso(char *nome)
     if (arq == NULL)
     {
         //se o arquivo nao existe ele cria um novo
-        printf("Arquivo nao esta no sistema!\nCriando arquivo...\n");
+        printf(YEL"Arquivo nao esta no sistema!\nCriando arquivo...\n");
         arq = fopen(nome, "w+b");
         if (arq == NULL)
         {
-            printf("Erro ao abrir arquivo!!!\n");
+            printf(RED"Erro ao abrir arquivo!!!\n");
             // exit(1);
             return NULL;
         }
     }
-    printf("Arquivo aberto\n");
+    printf(GRN"Arquivo aberto\n");
 
     return arq;
 }
@@ -104,20 +110,20 @@ Curso *inserirCurso(Curso *cursos, int *total)
         }
         if (indice == *total + MAX) //Se não houver espaço disponível realoca o vetor
         {
-            printf("Nao ha espaco disponivel...\nRealocando...\n");
+            printf(YEL"Nao ha espaco disponivel...\nRealocando...\n");
             int realocador = MAX;
             realocador += 10;
             cursos = (Curso*) realloc(cursos, realocador * sizeof(Curso)); //realoca cursos para preencher mais
             if (cursos == NULL)
             {
-                printf("Erro: memoria insuficiente\n");
+                printf(RED"Erro: memoria insuficiente\n");
                 return NULL;//return -1;
             }
         }
 
         do {
             cursos[indice].idCurso = indice + 1;
-            printf("\nCurso %i\n", indice + 1);
+            printf(CYN"\nCurso %i\n", indice + 1);
             setbuf(stdin, NULL);
             printf("Nome: ");
             fgets(cursos[indice].nome, 50, stdin);
@@ -129,15 +135,15 @@ Curso *inserirCurso(Curso *cursos, int *total)
             fgets(cursos[indice].periodo, 10, stdin);
             cursos[indice].periodo[strcspn(cursos[indice].periodo, "\n")] = '\0';
             if (verificarCurso(cursos, indice) == 1) { //verifica se os dados foram preenchidos corretamente
-                printf("Erro!!! Preencha novamente\n");
+                printf(YEL"Erro!!! Preencha novamente\n");
             }
             else {
-                printf("Curso cadastrado no sistema!\n");
+                printf(GRN"Curso cadastrado no sistema!\n");
                 (*total)++;
 
-                printf("ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n", cursos[indice].idCurso, cursos[indice].nome, cursos[indice].duracao, cursos[indice].periodo); //Mostra as informacoes atuais do Curso
+                printf(GRN"ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n", cursos[indice].idCurso, cursos[indice].nome, cursos[indice].duracao, cursos[indice].periodo); //Mostra as informacoes atuais do Curso
 
-                printf("Deseja cadastrar outro Curso? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro Curso
+                printf(CYN"Deseja cadastrar outro Curso? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro Curso
 
                 confirma = getUserInput();
                 char valorOpcao = atoi(confirma);
@@ -151,8 +157,8 @@ Curso *inserirCurso(Curso *cursos, int *total)
                     return cursos;
                 } else if (valorOpcao != 1)
                 {
-                    printf("Erro!!!\nDigite novamente\n");
-                    printf("Deseja cadastrar outro Curso? (1 - S/ 2 - N): ");
+                    printf(YEL"Erro!!!\nDigite novamente\n");
+                    printf(CYN"Deseja cadastrar outro Curso? (1 - S/ 2 - N): ");
                     confirma = getUserInput();
                     printf("%s\n", confirma);
                     valorOpcao = atoi(confirma);
