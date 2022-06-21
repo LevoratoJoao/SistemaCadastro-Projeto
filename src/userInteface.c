@@ -4,15 +4,20 @@
 #include <ctype.h>
 #include <unistd.h>
 
+//Bibliotecas
 #include <userInterface.h>
 #include <Cursos.h>
 #include <utils.h>
 #include <Alunos.h>
 #include <Matriculas.h>
+#include <csvFile.h>
 
+//Defines para os arquivos
 #define ALUNO "./dataAluno.dat"
 #define CURSO "./dataCurso.dat"
 #define MATRICULA "./dataMatricula.dat"
+
+//Defines uteis
 #define MAX 10
 #define RED "\x1B[31m"
 #define GRN "\x1B[32m"
@@ -34,11 +39,11 @@ void userInterface() {
     while (true) {
         printf(BLU"----------------------\n- SISTEMA DE ESCOLAR -\n----------------------\n");
         printf("---- MENU INICIAL ----\n");
-        printf(CYN"- Digite o numero da base de dados que deseja acessar:\n- 1 . Alunos\n- 2 . Cursos\n- 3 . Matriculas\n- 4 . Salvar operacoes\n- 5 . Sair do sistema\n----------------------\n");
+        printf(CYN"- Digite o numero da base de dados que deseja acessar:\n- 1 . Alunos\n- 2 . Cursos\n- 3 . Matriculas\n- 4 . Sair do sistema\n----------------------\n");
         printf("Digite sua opção:\n");
         opcao = getUserInput();
 
-        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 5) {
+        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 4) {
             printf(YEL"Opção inválida! Digite novamente:\n");
             fflush(stdout);
             usleep(900000);
@@ -62,12 +67,7 @@ void userInterface() {
                 matriculas = matriculasOptions(matriculas, alunos, cursos);
                 break;
 
-            case 4: // Salvar
-    //          arqAluno = salvarArqAluno(arqAluno, alunos, totalAlunos);
-    //          arqCurso = salvarArqCurso(arqCurso, infoCurso, totalAlunos);
-                break;
-
-            case 5: // Sair
+            case 4: // Sair
                 free(alunos);
                 free(cursos);
                 free(matriculas);
@@ -99,10 +99,10 @@ Aluno *alunosOptions(Aluno *alunos) {
     printf(BLU"------------------\n--- BASE DADOS ---\n------------------\n----- ALUNOS -----\n");
 
     while (true) {
-        printf(BLU"Registro de Alunos"CYN"\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir aluno\n2 - Remover aluno\n3 - Pesquisar\n4 - Alterar aluno\n5 - Listar alunos\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
+        printf(BLU"Registro de Alunos"CYN"\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir aluno\n2 - Remover aluno\n3 - Pesquisar\n4 - Alterar aluno\n5 - Listar alunos\n6 - Salvar operacoes\n7 - Exportar dados\n8 - Voltar ao menu inicial\n");
         char *opcao = getUserInput();
 
-        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
+        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 8) {
             printf(YEL"Opção inválida! Digite novamente:\n");
             fflush(stdout);
             usleep(900000);
@@ -271,7 +271,11 @@ Aluno *alunosOptions(Aluno *alunos) {
                 fclose(arquivo);
                 break;
 
-            case 7: // Voltar ao menu inicial
+            case 7: // Exportar alunos
+                exportarAlunos(alunos, totalAlunos);
+                break;
+
+            case 8: // Voltar ao menu inicial
                 //system("clear");
                 return alunos;
                 break;
@@ -284,10 +288,8 @@ Curso *cursosOptions(Curso *cursos) {
 
     // CRIAR CURSO
     FILE *arquivo = abrirArqCurso(CURSO);
-    //FILE *arquivoMatricula = abrirArqMatricula(MATRICULA);
 
     int totalCursos = 0;
-    //int totalMatriculas = 0;
 
     printf("Carregando...\n");
     fflush(stdout);
@@ -295,7 +297,6 @@ Curso *cursosOptions(Curso *cursos) {
     system("clear");
 
     cursos = getCursos(arquivo, &totalCursos);
-    //matriculas = getMatricula(arquivoMatricula, &totalMatriculas);
 
     char *id = NULL;
     int idCurso = 0;
@@ -305,10 +306,10 @@ Curso *cursosOptions(Curso *cursos) {
     printf(BLU"------------------\n----- BASE DADOS -----\n------------------\n----- CURSOS -----\n");
 
     while (true) {
-        printf(BLU"\nRegistro de Cursos"CYN"\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir curso\n2 - Remover curso\n3 - Pesquisar\n4 - Alterar curso\n5 - Listar curso\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
+        printf(BLU"\nRegistro de Cursos"CYN"\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir curso\n2 - Remover curso\n3 - Pesquisar\n4 - Alterar curso\n5 - Listar curso\n6 - Salvar operacoes\n7 - Exportar dados\n8 - Voltar ao menu inicial\n");
         char *opcao = getUserInput();
 
-        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
+        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 8) {
             printf(YEL"Opção inválida! Digite novamente:\n");
             free(opcao);
             continue;
@@ -471,7 +472,11 @@ Curso *cursosOptions(Curso *cursos) {
                 fclose(arquivo);
                 break;
 
-            case 7: // Voltar ao menu inicial
+            case 7: // Exportar cursos
+                exportarCursos(cursos, totalCursos);
+                break;
+
+            case 8: // Voltar ao menu inicial
                 //free(matriculas);
                 return cursos;
                 break;
@@ -506,10 +511,10 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
     printf(BLU"----------------------\n----- BASE DADOS -----\n----------------------\n----- MATRICULAS -----\n");
 
     while (true) {
-        printf(BLU"Registro de Matriculas"CYN"\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir matricula\n2 - Excluir matricula\n3 - Pesquisar\n4 - Alterar matricula\n5 - Listar matriculas\n6 - Salvar operacoes\n7 - Voltar ao menu inicial\n");
+        printf(BLU"Registro de Matriculas"CYN"\n- Qual operacao deseja realizar dentro do sistema ?\n1 - Inserir matricula\n2 - Excluir matricula\n3 - Pesquisar\n4 - Alterar matricula\n5 - Listar matriculas\n6 - Salvar operacoes\n7 - Exportar dados\n8 - Voltar ao menu inicial\n");
         char *opcao = getUserInput();
 
-        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
+        if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 8) {
             printf(YEL"Opção inválida! Digite novamente:\n");
             free(opcao);
             continue;
@@ -592,7 +597,11 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                 fclose(arquivo);
                 break;
 
-            case 7: // Voltar ao menu inicial
+            case 7:
+                exportarMatriculas(matriculas, totalMatriculas);
+                break;
+
+            case 8: // Voltar ao menu inicial
                 //system("clear");
                 free(alunos);
                 free(cursos);

@@ -6,6 +6,8 @@
 #include <Alunos.h>
 #include <utils.h>
 
+#define ALUNO_CSV "./dataAluno.csv"
+
 #define MAX 10
 #define RED "\x1B[31m"
 #define GRN "\x1B[32m"
@@ -294,7 +296,7 @@ void alterarAluno(Aluno alunos[], char nome[], int id, int total)
                 char *opcao = getUserInput();
 
                 if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 7) {
-                    printf("Opção inválida! Digite novamente:\n");
+                    printf(YEL"Opção inválida! Digite novamente:\n");
                     free(opcao);
                     continue;
                 }
@@ -304,7 +306,7 @@ void alterarAluno(Aluno alunos[], char nome[], int id, int total)
                 switch (valorOpcao)
                 {
                 case 1:
-                    printf("Nome: ");
+                    printf(CYN"Nome: ");
                     setbuf(stdin, NULL);
                     fgets(alunos[i].nome, 50, stdin);
                     alunos[i].nome[strcspn(alunos[i].nome, "\n")] = '\0';
@@ -329,12 +331,12 @@ void alterarAluno(Aluno alunos[], char nome[], int id, int total)
                     return;
                     break;
                 default:
-                    printf("Opcao invalida! Digite novamente\n");
+                    printf(YEL"Opcao invalida! Digite novamente\n");
                     break;
                 }
                 if (verificarAluno(alunos, i) == 1)//If() -- verifica se os dados do aluno foram alterados corretamente
                 {
-                    printf("Erro!!! Preencha novamente\n");
+                    printf(RED"Erro!!! Preencha novamente\n");
                 } else
                 {
                     printf("Aluno alterado no sistema!\n");
@@ -391,4 +393,22 @@ FILE *salvarArqAluno(FILE *arq, Aluno *alunos, int *total)
     }
 
     return arq;
+}
+
+void exportarAlunos(Aluno *alunos, int total) {
+    printf(YEL"Exportando dados dos alunos...\n");
+    printf("Aguarde...\n");
+    usleep(100000);
+    char alunos_csv[50];
+    sprintf(alunos_csv, "%s.csv", ALUNO_CSV);
+    FILE *arq_csv = fopen(alunos_csv, "w+");
+    fputs("ID, Nome, Idade, Cidade, Nascimento\n", arq_csv); //Cabeçalho do arquivo csv
+    for (int i = 0; i < total; i++)
+    {
+        fprintf(arq_csv, "%d, %s, %d, %s, %d/%d/%d\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].cidade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano);
+    }
+    printf(GRN"Dados exportados com sucesso!\n");
+    printf(CYN"Aperte ENTER para voltar ao menu\n");
+    free(getUserInput());
+    fclose(arq_csv);
 }

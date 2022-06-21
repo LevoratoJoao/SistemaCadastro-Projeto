@@ -21,5 +21,6 @@ int pesquisarMatricula(Matricula *matriculas, int id, int total);
 void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, Curso *cursos, int *totalAlunos, int *totalCursos);
 void listarMatriculas(Matricula *matriculas, int total);
 FILE *salvarArqMatricula(FILE *arq, Matricula *matriculas, int *total);
+void exportarMatriculas(Matricula *matriculas, int total);
 
 #endif

@@ -5,7 +5,8 @@
         "string.h": "c",
         "*.tcc": "c",
         "sstream": "c",
-        "streambuf": "c"
+        "streambuf": "c",
+        "matriculas.h": "c"
     },
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",

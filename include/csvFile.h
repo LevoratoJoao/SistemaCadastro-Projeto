@@ -2,10 +2,12 @@
 #define CSVFILE_H
 
 #include <stdio.h>
+#include <Alunos.h>
 
-FILE *openCSV();
+FILE *openCSValunos();
 void writeLineFile(FILE *f, char *line);
-char *headerCSV();
-void fillCSV(char **nameList);
+void writeLineFileAluno(FILE *f, Aluno *line, int total);
+char *headerCSValunos();
+void fillCSValunos(Aluno *nameList, int total);
 
 #endif

@@ -25,6 +25,7 @@ int pesquisarAluno(Aluno *alunos, char *nome, int id, int total);
 void alterarAluno(Aluno *alunos, char *nome, int id, int total);
 void listarAlunos(Aluno *alunos, int total);
 FILE *salvarArqAluno(FILE *arq, Aluno *alunos, int *total);
+void exportarAlunos(Aluno *alunos, int total);
 
 
 #endif

@@ -17,5 +17,6 @@ int pesquisarCurso(Curso *cursos, char *nome, int id, int total);
 void alterarCurso(Curso *cursos, char *nome, int id, int total);
 void listarCursos(Curso *cursos, int total);
 FILE *salvarArqCurso(FILE *arq, Curso *cursos, int *total);
+void exportarCursos(Curso *alunos, int total);
 
 #endif

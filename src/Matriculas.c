@@ -9,7 +9,14 @@
 #include <Cursos.h>
 #include <utils.h>
 
+#define MATRICULA_CSV "./dataMatricula.csv"
 #define MAXIMO 10
+#define RED "\x1B[31m"
+#define GRN "\x1B[32m"
+#define YEL "\x1B[33m"
+#define CYN "\x1B[36m"
+#define RESET "\x1B[0m"
+#define BLU "\x1B[34m"
 
 FILE *abrirArqMatricula(char *nome)
 {
@@ -54,7 +61,7 @@ Matricula *getMatricula(FILE *arquivo, int *total) {
 
 int verificarMatricula(Matricula *matriculas, int indice)
 {
-    if (matriculas[indice].anoMatricula <= 0 || matriculas[indice].coeficiente < 0 || matriculas[indice].semestre < 0)//If() -- verifica se os dados do Curso foram inseridos corretamente
+    if (matriculas[indice].anoMatricula <= 0 || matriculas[indice].coeficiente < 0 || matriculas[indice].semestre < 0 || matriculas[indice].aluno.idAluno < 0 || matriculas[indice].curso.idCurso < 0)//If() -- verifica se os dados do Curso foram inseridos corretamente
     {
         return 1;
     } else {
@@ -68,6 +75,7 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
     char *confirma = NULL; //confirmacao
     //Verifica se tem um espaço disponível (id = 0)
     int valorOpcao = 0;
+    int naoTem = 0;
     while (valorOpcao != 2) //Enquanto não for escolhido a opção de sair
     {
         for (int i = 1; i <= *totalMatriculas; i++) { //Verifica se tem um espaço disponível (id = 0)
@@ -105,8 +113,16 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
                     printf("Idade: %i\n", matriculas[indice].aluno.idade);
                     printf("Cidade: %s\n", matriculas[indice].aluno.cidade);
                     printf("Data de nascimento: %d/%d/%d\n", matriculas[indice].aluno.nascimento.dia, matriculas[indice].aluno.nascimento.mes, matriculas[indice].aluno.nascimento.ano);
+                    naoTem = 0;
                     break;
+                } else {
+                    naoTem = 1;
                 }
+            }
+            if (naoTem == 1)
+            {
+                printf(YEL"O ID do aluno inserido nao se encontra na base de dados do sistema!\n");
+                matriculas[indice].aluno.idAluno = 0;
             }
             printf("ID do curso: ");
             scanf("%d", &matriculas[indice].curso.idCurso);
@@ -120,7 +136,15 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
                     printf("Nome: %s\n", matriculas[indice].curso.nome);
                     printf("Periodo: %s\n", matriculas[indice].curso.periodo);
                     printf("Duracao (semestres): %d\n", matriculas[indice].curso.duracao);
+                    naoTem = 0;
+                } else {
+                    naoTem = 1;
                 }
+            }
+            if (naoTem == 1)
+            {
+                printf(YEL"O ID do curso inserido nao se encontra na base de dados do sistema!\n");
+                matriculas[indice].curso.idCurso = 0;
             }
             printf("Ano de matricula: ");
             scanf("%d", &matriculas[indice].anoMatricula);
@@ -130,7 +154,7 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
             scanf("%d", &matriculas[indice].semestre);
 
             if (verificarMatricula(matriculas, indice) == 1) { //verifica se os dados foram preenchidos corretamente
-                printf("Erro!!! Preencha novamente\n");
+                printf(RED"Erro!!! Preencha novamente\n");
             }
             else {
                 printf("Matricula cadastrada no sistema!\n");
@@ -343,5 +367,28 @@ FILE *salvarArqMatricula(FILE *arq, Matricula *matriculas, int *total)
     }
 
     return arq;
+}
+
+void exportarMatriculas(Matricula *matriculas, int total) {
+    printf(YEL"Exportando dados das matriculas...\n");
+    printf("Aguarde...\n");
+    usleep(100000);
+    char matriculas_csv[201];
+    sprintf(matriculas_csv, "%s.csv", MATRICULA_CSV);
+    FILE *arq_csv = fopen(matriculas_csv, "w+");
+    if (arq_csv == NULL)
+    {
+        printf(RED"Erro ao abrir o arquivo!\n");
+        return;
+    }
+    fprintf(arq_csv, "ID da matricula, ID do aluno, Nome do aluno, Idade do aluno, Cidade do aluno, Data de nascimento, ID do curso, Nome do curso, Periodo do curso, Duracao do curso, Ano de matricula, Coeficiente, Semestre\n");
+    for (int i = 0; i < total; i++)
+    {
+        fprintf(arq_csv, "%d, %d, %s, %d, %s, %d/%d/%d, %d, %s, %s, %d, %d, %.2f, %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
+    }
+    printf(GRN"Dados exportados com sucesso!\n");
+    printf(CYN"Aperte ENTER para voltar ao menu\n");
+    free(getUserInput());
+    fclose(arq_csv);
 }
 
