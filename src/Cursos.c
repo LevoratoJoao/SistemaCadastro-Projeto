@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 #define MAX 10
-#define CURSO_CSV "./dataCurso.csv"
+#define CURSO_CSV "./dataCurso"
 #define RED "\x1B[31m"
 #define GRN "\x1B[32m"
 #define YEL "\x1B[33m"
@@ -112,7 +112,7 @@ Curso *inserirCurso(Curso *cursos, int *total)
         }
         if (indice == *total + MAX) //Se não houver espaço disponível realoca o vetor
         {
-            printf(YEL"Nao ha espaco disponivel...\nRealocando...\n");
+            printf(RED"Nao ha espaco disponivel...\nRealocando...\n");
             int realocador = MAX;
             realocador += 10;
             cursos = (Curso*) realloc(cursos, realocador * sizeof(Curso)); //realoca cursos para preencher mais
@@ -137,7 +137,7 @@ Curso *inserirCurso(Curso *cursos, int *total)
             fgets(cursos[indice].periodo, 10, stdin);
             cursos[indice].periodo[strcspn(cursos[indice].periodo, "\n")] = '\0';
             if (verificarCurso(cursos, indice) == 1) { //verifica se os dados foram preenchidos corretamente
-                printf(YEL"Erro!!! Preencha novamente\n");
+                printf(RED"Erro!!! Preencha novamente\n");
             }
             else {
                 printf(GRN"Curso cadastrado no sistema!\n");
@@ -156,10 +156,11 @@ Curso *inserirCurso(Curso *cursos, int *total)
                     //fclose(arq);
                     printf("Aperte ENTER para voltar ao menu\n");
                     free(getUserInput());// Apos inserido todos os cursos desejados basta apertaar ENTER para voltar ao menu
+                    system("clear");
                     return cursos;
                 } else if (valorOpcao != 1)
                 {
-                    printf(YEL"Erro!!!\nDigite novamente\n");
+                    printf(RED"Erro!!!\nDigite novamente\n");
                     printf(CYN"Deseja cadastrar outro Curso? (1 - S/ 2 - N): ");
                     confirma = getUserInput();
                     printf("%s\n", confirma);
@@ -212,14 +213,10 @@ int removerCurso(Curso cursos[], char nome[], int id, int total)
             char valorOpcao = atoi(confirmacao);
             free(confirmacao);//Confirmacao para excluir
             if (valorOpcao == 2) {
-                printf("Operacao finalizada\n");
-                printf("Aperte ENTER para voltar ao menu\n");
-                free(getUserInput());
                 return 3;
-
             }
             else if (valorOpcao != 1) {
-                printf("Erro!!!\nDigite novamente\n");
+                printf(RED"Erro!!!\nDigite novamente\n");
                 printf(CYN"Deseja continuar ? 1 - Sim / 2 - Nao\n");
                 confirmacao = getUserInput();
                 valorOpcao = atoi(confirmacao);
@@ -249,7 +246,7 @@ int pesquisarCurso(Curso *cursos, char *nome, int id, int total)
     {
         if (strcasecmp(cursos[i].nome, nome) == 0 || cursos[i].idCurso == id)
         {
-            printf(CYN"ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n", cursos[i].idCurso, cursos[i].nome, cursos[i].duracao, cursos[i].periodo);
+            printf(GRN"ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n"CYN, cursos[i].idCurso, cursos[i].nome, cursos[i].duracao, cursos[i].periodo);
             return 0;
         }
     }
@@ -272,8 +269,8 @@ void alterarCurso(Curso cursos[], char nome[], int id, int total)
         {
             do
             {
-                printf(CYN"ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n", cursos[i].idCurso, cursos[i].nome, cursos[i].duracao, cursos[i].periodo);//Mostra as informacoes atuais do Curso
-                printf("Qual informacao deseja alterar do registro do Curso ?\n1 - Nome\n2 - Duracao\n3 - Periodo\n4 - Cancelar\n");//Opcoes de alteracao (ID nao pode ser alterado)
+                printf(YEL"ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n", cursos[i].idCurso, cursos[i].nome, cursos[i].duracao, cursos[i].periodo);//Mostra as informacoes atuais do Curso
+                printf(CYN"Qual informacao deseja alterar do registro do Curso ?\n1 - Nome\n2 - Duracao\n3 - Periodo\n4 - Cancelar\n");//Opcoes de alteracao (ID nao pode ser alterado)
 
                 char *opcao = getUserInput();
 
@@ -316,6 +313,7 @@ void alterarCurso(Curso cursos[], char nome[], int id, int total)
                 } else
                 {
                     printf(GRN"Curso alterado no sistema!\n");
+                    system("clear");
                 }
             } while (verificarCurso(cursos, i) == 1);//Verificacao de preenchimento das informacoes
         }
@@ -337,6 +335,7 @@ void listarCursos(Curso cursos[], int total)
     printf("Total de cursos registrados no sistema: %d\n", total);
     printf("Aperte ENTER para voltar ao menu\n");
     free(getUserInput());
+    system("clear");
 }
 
 /**
@@ -356,7 +355,7 @@ FILE *salvarArqCurso(FILE *arq, Curso *cursos, int *total)
     printf(YEL"Salvando os dados...\nNao feche o programa!\n");
     for (int i = 0; i < *total; i++)
     {
-        fwrite(&cursos[i], sizeof(Curso), 1, arq);
+        fwrite(&cursos[i], sizeof(Curso), 1, arq); //Escreve os dados no arquivo
     }
     aux = ftell(arq);
     if (aux == 0)//Verifica se os dados foram salvos corretamente, se o arquivo estiver vazio eles nao foram salvos
@@ -365,12 +364,20 @@ FILE *salvarArqCurso(FILE *arq, Curso *cursos, int *total)
     } else
     {
         printf(GRN"Dados salvos com sucesso!\n");
-        usleep(5000000);
+        printf(CYN"Aperte ENTER para voltar ao menu\n");
+        free(getUserInput());
+        system("clear");
     }
 
     return arq;
 }
 
+/**
+ * @brief Exporta os dados de cursos para um arquivo .csv
+ *
+ * @param cursos
+ * @param total
+ */
 void exportarCursos(Curso *cursos, int total) {
     printf(YEL"Exportando dados dos cursos...\n");
     printf("Aguarde...\n");
@@ -390,5 +397,6 @@ void exportarCursos(Curso *cursos, int total) {
     printf(GRN"Dados exportados com sucesso!\n");
     printf(CYN"Aperte ENTER para voltar ao menu\n");
     free(getUserInput());
+    system("clear");
     fclose(arq_csv);
 }

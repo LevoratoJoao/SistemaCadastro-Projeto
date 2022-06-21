@@ -6,7 +6,7 @@
 #include <Alunos.h>
 #include <utils.h>
 
-#define ALUNO_CSV "./dataAluno.csv"
+#define ALUNO_CSV "./dataAluno"
 
 #define MAX 10
 #define RED "\x1B[31m"
@@ -157,7 +157,7 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
                 printf(GRN"Aluno cadastrado no sistema!\n");
                 (*total)++;
 
-                printf("ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[indice].idAluno, alunos[indice].nome, alunos[indice].idade, alunos[indice].nascimento.dia, alunos[indice].nascimento.mes, alunos[indice].nascimento.ano, alunos[indice].cidade);//Mostra as informacoes atuais do aluno
+                printf(GRN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[indice].idAluno, alunos[indice].nome, alunos[indice].idade, alunos[indice].nascimento.dia, alunos[indice].nascimento.mes, alunos[indice].nascimento.ano, alunos[indice].cidade);//Mostra as informacoes atuais do aluno
 
                 printf(CYN"Deseja cadastrar outro aluno? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro aluno
 
@@ -170,10 +170,11 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
                     //fclose(arq);
                     printf("Aperte ENTER para voltar ao menu\n");
                     free(getUserInput());// Apos inserido todos os alunos desejados basta apertaar ENTER para voltar ao menu
+                    system("clear");
                     return alunos;
                 } else if (valorOpcao != 1)
                 {
-                    printf(YEL"Erro!!!\nDigite novamente\n");
+                    printf(RED"Erro!!!\nDigite novamente\n");
                     printf(CYN"Deseja cadastrar outro aluno? (1 - S/ 2 - N): ");
                     confirma = getUserInput();
                     printf("%s\n", confirma);
@@ -229,14 +230,11 @@ int removerAluno(Aluno alunos[], char nome[], int id, int *total)
             char valorOpcao = atoi(confirmacao);
             free(confirmacao);//Confirmacao para excluir
             if (valorOpcao == 2) {
-                printf(GRN"Operacao finalizada\n");
-                printf(CYN"Aperte ENTER para voltar ao menu\n");
-                free(getUserInput());
                 return 3;
 
             }
             else if (valorOpcao != 1) {
-                printf(YEL"Erro!!!\nDigite novamente\n");
+                printf(RED"Erro!!!\nDigite novamente\n");
                 printf(CYN"Deseja continuar ? 1 - Sim / 2 - Nao\n");
                 confirmacao = getUserInput();
                 valorOpcao = atoi(confirmacao);
@@ -266,7 +264,7 @@ int pesquisarAluno(Aluno *alunos, char *nome, int id, int total)
     {
         if (strcasecmp(alunos[i].nome, nome) == 0 || alunos[i].idAluno == id)
         {
-            printf(CYN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
+            printf(GRN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n"CYN, alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
             return 0;
         }
     }
@@ -290,8 +288,8 @@ void alterarAluno(Aluno alunos[], char nome[], int id, int total)
         {
             do
             {
-                printf(CYN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);//Mostra as informacoes atuais do aluno
-                printf("Qual informacao deseja alterar do registro do aluno ?\n1 - Nome\n2 - Idade\n3 - Nascimento\n4 - Cidade\n5 - Cancelar\n");//Opcoes de alteracao (ID nao pode ser alterado)
+                printf(YEL"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);//Mostra as informacoes atuais do aluno
+                printf(CYN"Qual informacao deseja alterar do registro do aluno ?\n1 - Nome\n2 - Idade\n3 - Nascimento\n4 - Cidade\n5 - Cancelar\n");//Opcoes de alteracao (ID nao pode ser alterado)
 
                 char *opcao = getUserInput();
 
@@ -339,7 +337,7 @@ void alterarAluno(Aluno alunos[], char nome[], int id, int total)
                     printf(RED"Erro!!! Preencha novamente\n");
                 } else
                 {
-                    printf("Aluno alterado no sistema!\n");
+                    printf(GRN"Aluno alterado no sistema!\n");
                 }
             } while (verificarAluno(alunos, i) == 1);//Verificacao de preenchimento das informacoes
         }
@@ -361,6 +359,7 @@ void listarAlunos(Aluno alunos[], int total)
     printf("Total de alunos registrados no sistema: %d\n", total);
     printf("Aperte ENTER para voltar ao menu\n");
     free(getUserInput());
+    system("clear");
 }
 
 /**
@@ -389,12 +388,20 @@ FILE *salvarArqAluno(FILE *arq, Aluno *alunos, int *total)
     } else
     {
         printf(GRN"Dados salvos com sucesso!\n");
-        usleep(5000000);
+        printf(CYN"Aperte ENTER para voltar ao menu\n");
+        free(getUserInput());
+        system("clear");
     }
 
     return arq;
 }
 
+/**
+ * @brief Exporta os dados de cursos para um arquivo .csv
+ *
+ * @param alunos
+ * @param total
+ */
 void exportarAlunos(Aluno *alunos, int total) {
     printf(YEL"Exportando dados dos alunos...\n");
     printf("Aguarde...\n");
@@ -402,6 +409,10 @@ void exportarAlunos(Aluno *alunos, int total) {
     char alunos_csv[50];
     sprintf(alunos_csv, "%s.csv", ALUNO_CSV);
     FILE *arq_csv = fopen(alunos_csv, "w+");
+    if (arq_csv == NULL) {
+        printf(RED"Erro ao abrir o arquivo!\n");
+        return;
+    }
     fputs("ID, Nome, Idade, Cidade, Nascimento\n", arq_csv); //Cabeçalho do arquivo csv
     for (int i = 0; i < total; i++)
     {
@@ -410,5 +421,6 @@ void exportarAlunos(Aluno *alunos, int total) {
     printf(GRN"Dados exportados com sucesso!\n");
     printf(CYN"Aperte ENTER para voltar ao menu\n");
     free(getUserInput());
+    system("clear");
     fclose(arq_csv);
 }

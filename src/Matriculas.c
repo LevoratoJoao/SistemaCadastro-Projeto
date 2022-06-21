@@ -9,7 +9,7 @@
 #include <Cursos.h>
 #include <utils.h>
 
-#define MATRICULA_CSV "./dataMatricula.csv"
+#define MATRICULA_CSV "./dataMatricula"
 #define MAXIMO 10
 #define RED "\x1B[31m"
 #define GRN "\x1B[32m"
@@ -24,11 +24,11 @@ FILE *abrirArqMatricula(char *nome)
     if (arq == NULL)
     {
         //se o arquivo nao existe ele cria um novo
-        printf("Arquivo nao esta no sistema!\nCriando arquivo...\n");
+        printf(YEL"Arquivo nao esta no sistema!\nCriando arquivo...\n");
         arq = fopen(nome, "w+b");
         if (arq == NULL)
         {
-            printf("Erro ao abrir arquivo!!!\n");
+            printf(RED"Erro ao abrir arquivo!!!\n");
             // exit(1);
             return NULL;
         }
@@ -86,20 +86,20 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
         }
         if (indice == *totalMatriculas + MAXIMO) //Se não houver espaço disponível realoca o vetor
         {
-            printf("Nao ha espaco disponivel...\nRealocando...\n");
+            printf(RED"Nao ha espaco disponivel...\nRealocando...\n");
             int realocador = MAXIMO;
             realocador += 10;
             matriculas = (Matricula*) realloc(matriculas, realocador * sizeof(Matricula)); //realoca cursos para preencher mais
             if (matriculas == NULL)
             {
-                printf("Erro: memoria insuficiente\n");
+                printf(RED"Erro: memoria insuficiente\n");
                 return NULL;//return -1;
             }
         }
 
         do {
             matriculas[indice].idMatricula = indice + 1;
-            printf("\nMatricula %i\n", indice + 1);
+            printf(CYN"\nMatricula %i\n", indice + 1);
             printf("ID do aluno: ");
             scanf("%d", &matriculas[indice].aluno.idAluno);
             for (int i = 0; i < *totalAlunos; i++)
@@ -123,8 +123,9 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
             {
                 printf(YEL"O ID do aluno inserido nao se encontra na base de dados do sistema!\n");
                 matriculas[indice].aluno.idAluno = 0;
+                return matriculas;
             }
-            printf("ID do curso: ");
+            printf(CYN"ID do curso: ");
             scanf("%d", &matriculas[indice].curso.idCurso);
             for (int i = 0; i < *totalCursos; i++)
             {
@@ -145,8 +146,9 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
             {
                 printf(YEL"O ID do curso inserido nao se encontra na base de dados do sistema!\n");
                 matriculas[indice].curso.idCurso = 0;
+                return matriculas;
             }
-            printf("Ano de matricula: ");
+            printf(CYN"Ano de matricula: ");
             scanf("%d", &matriculas[indice].anoMatricula);
             printf("Coeficiente: ");
             scanf("%f", &matriculas[indice].coeficiente);
@@ -157,16 +159,16 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
                 printf(RED"Erro!!! Preencha novamente\n");
             }
             else {
-                printf("Matricula cadastrada no sistema!\n");
+                printf(GRN"Matricula cadastrada no sistema!\n");
                 (*totalMatriculas)++;
 
                 printf("ID da matricula: %d | ID do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semmestre: %d\n", matriculas[indice].idMatricula, matriculas[indice].aluno.idAluno, matriculas[indice].aluno.nome, matriculas[indice].aluno.idade, matriculas[indice].aluno.cidade, matriculas[indice].aluno.nascimento.dia, matriculas[indice].aluno.nascimento.mes, matriculas[indice].aluno.nascimento.ano, matriculas[indice].curso.idCurso, matriculas[indice].curso.nome, matriculas[indice].curso.periodo, matriculas[indice].curso.duracao, matriculas[indice].anoMatricula, matriculas[indice].coeficiente, matriculas[indice].semestre); //Mostra as informacoes atuais do Curso
 
-                printf("Deseja cadastrar outra matricula? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro Curso
+                printf(CYN"Deseja cadastrar outra matricula? (1 - S/ 2 - N): "); //Pergunta se deseja cadastrar outro Curso
                 setbuf(stdin, NULL);
                 confirma = getUserInput();
                 if (strlen(confirma) != 1 || atoi(confirma) < 1 || atoi(confirma) > 2) {
-                    printf("Opção inválida! Digite novamente:\n");
+                    printf(YEL"Opção inválida! Digite novamente:\n");
                     free(confirma);
                     continue;
                 }
@@ -174,8 +176,9 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
                 free(confirma);
 
                 if (valorOpcao == 2) {
-                    printf("Aperte ENTER para voltar ao menu\n");
+                    printf(CYN"Aperte ENTER para voltar ao menu\n");
                     free(getUserInput());// Apos inserido todos os cursos desejados basta apertaar ENTER para voltar ao menu
+                    system("clear");
                     return matriculas;
                 } else {
                     continue;
@@ -207,21 +210,21 @@ Matricula limparMatricula(Matricula matriculas[], int indice)
     return matriculas[indice];
 }
 
-int removerMatricula(Matricula *matriculas, int id, int *total)
+int removerMatricula(Matricula *matriculas, int id, int idAluno, int *total)
 {
     char *confirmacao;
     int valorOpcao = 3;
     for (int i = 0; i < *total; i++)
     {
-        if (matriculas[i].idMatricula == id)//Busca a matricula desejada
+        if (matriculas[i].idMatricula == id || matriculas[i].aluno.idAluno == idAluno)//Busca a matricula desejada
         {
-            printf("As seguintes informacoes da matricula serao apagadas do registro:\n");
+            printf(YEL"As seguintes informacoes da matricula serao apagadas do registro:\n");
             printf("ID da matricula: %d | ID: do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semestre: %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
-            printf("Deseja continuar ? 1 - Sim / 2 - Nao\n");
             setbuf(stdin, NULL);
+            printf(CYN"Deseja continuar ? 1 - Sim / 2 - Nao\n");
             confirmacao = getUserInput();
             if (strlen(confirmacao) != 1 || atoi(confirmacao) < 1 || atoi(confirmacao) > 2) {
-                printf("Opção inválida! Digite novamente:\n");
+                printf(YEL"Opção inválida! Digite novamente:\n");
                 free(confirmacao);
                 continue;
             }
@@ -241,13 +244,13 @@ int removerMatricula(Matricula *matriculas, int id, int *total)
     return 1;
 }
 
-int pesquisarMatricula(Matricula *matriculas, int id, int total)
+int pesquisarMatricula(Matricula *matriculas, int id, int idAluno, int total)
 {
     for (int i = 0; i < total; i++)
     {
-        if (matriculas[i].idMatricula == id)
+        if (matriculas[i].idMatricula == id || matriculas[i].aluno.idAluno == idAluno)
         {
-            printf("ID da matricula: %d | ID: do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semestre: %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
+            printf(GRN"ID da matricula: %d | ID: do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semestre: %d\n"CYN, matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
             return 0;
         }
     }
@@ -262,14 +265,14 @@ void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, C
         {
             do
             {
-                printf("ID da matricula: %d | ID: do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semestre: %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
-                printf("Qual informacao deseja alterar do registro da matricula ?\n1 - Informacoes do aluno\n  - As alteracoes serao feitas pelo ID do aluno, ira substituir todas as informacoes do aluno dessa matricula pela do aluno do ID inserido\n2 - Informacoes do curso\n  - As alteracoes serao feitas pelo ID do curso, ira substituir todas as informacoes do curso dessa matricula pela do curso do ID inserido\n3 - Ano da matricula\n3 - Coeficiente\n5 - Semestre\n6 - Cancelar\n");//Opcoes de alteracao (ID nao pode ser alterado)
+                printf(YEL"ID da matricula: %d | ID: do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semestre: %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
+                printf(CYN"Qual informacao deseja alterar do registro da matricula ?\n1 - Informacoes do aluno\n  - As alteracoes serao feitas pelo ID do aluno, ira substituir todas as informacoes do aluno dessa matricula pela do aluno do ID inserido\n2 - Informacoes do curso\n  - As alteracoes serao feitas pelo ID do curso, ira substituir todas as informacoes do curso dessa matricula pela do curso do ID inserido\n3 - Ano da matricula\n3 - Coeficiente\n5 - Semestre\n6 - Cancelar\n");//Opcoes de alteracao (ID nao pode ser alterado)
 
 
                 char *opcao = getUserInput();
 
                 if (strlen(opcao) != 1 || atoi(opcao) < 1 || atoi(opcao) > 6) {
-                    printf("Opção inválida! Digite novamente:\n");
+                    printf(YEL"Opção inválida! Digite novamente:\n");
                     free(opcao);
                     continue;
                 }
@@ -279,7 +282,7 @@ void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, C
                 switch (valorOpcao)
                 {
                 case 1:
-                    printf("Digite o ID do aluno: ");
+                    printf(CYN"Digite o ID do aluno: ");
                     scanf("%d", &matriculas[i].aluno.idAluno);
                     for (int i = 0; i < *totalAlunos; i++)
                     {
@@ -317,15 +320,16 @@ void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, C
                     return;
                     break;
                 default:
-                    printf("Opcao invalida! Digite novamente\n");
+                    printf(YEL"Opcao invalida! Digite novamente\n");
                     break;
                 }
                 if (verificarMatricula(matriculas, i) == 1)//If() -- verifica se os dados da matricula foram alterados corretamente
                 {
-                    printf("Erro!!! Preencha novamente\n");
+                    printf(RED"Erro!!! Preencha novamente\n");
                 } else
                 {
-                    printf("Matricula alterada no sistema!\n");
+                    printf(GRN"Matricula alterada no sistema!\n");
+                    system("clear");
                 }
             } while (verificarMatricula(matriculas, i) == 1);//Verificacao de preenchimento das informacoes
         }
@@ -338,12 +342,13 @@ void listarMatriculas(Matricula matriculas[], int total)
     {
         if (matriculas[i].idMatricula != 0)
         {
-            printf("ID da matricula: %d | ID: do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semmestre: %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
+            printf(CYN"ID da matricula: %d | ID: do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semmestre: %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
         }
     }
     printf("Total de matriculas registradas no sistema: %d\n", total);
     printf("Aperte ENTER para voltar ao menu\n");
     free(getUserInput());
+    system("clear");
 }
 
 FILE *salvarArqMatricula(FILE *arq, Matricula *matriculas, int *total)
@@ -352,7 +357,7 @@ FILE *salvarArqMatricula(FILE *arq, Matricula *matriculas, int *total)
     char nome[31] = {"./dataMatricula.dat"};
     arq = fopen(nome, "r+b");
 
-    printf("Salvando os dados...\nNao feche o programa!\n");
+    printf(YEL"Salvando os dados...\nNao feche o programa!\n");
     for (int i = 0; i < *total; i++)
     {
         fwrite(&matriculas[i], sizeof(Matricula), 1, arq);
@@ -360,10 +365,13 @@ FILE *salvarArqMatricula(FILE *arq, Matricula *matriculas, int *total)
     aux = ftell(arq);
     if (aux == 0)//Verifica se os dados foram salvos corretamente, se o arquivo estiver vazio eles nao foram salvos
     {
-        printf("Erro ao salvar! Tente novamente\n");
+        printf(RED"Erro ao salvar! Tente novamente\n");
     } else
     {
-        printf("Dados salvos com sucesso!\n");
+        printf(GRN"Dados salvos com sucesso!\n");
+        printf(CYN"Aperte ENTER para voltar ao menu\n");
+        free(getUserInput());
+        system("clear");
     }
 
     return arq;
@@ -389,6 +397,6 @@ void exportarMatriculas(Matricula *matriculas, int total) {
     printf(GRN"Dados exportados com sucesso!\n");
     printf(CYN"Aperte ENTER para voltar ao menu\n");
     free(getUserInput());
+    system("clear");
     fclose(arq_csv);
 }
-
