@@ -604,7 +604,7 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                     free(opcao);
 
                     //REMOVER MATRICULA
-                    retorno = removerMatricula(matriculas, idMatricula, idAluno, &totalAlunos);
+                    retorno = removerMatricula(matriculas, idMatricula, idAluno, &totalMatriculas);
                     if (retorno == 1) {
                         printf(YEL"Matricula nao encontrado\n");
                         printf(CYN"Aperte ENTER para voltar ao menu\n");
@@ -630,7 +630,7 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                     free(opcao);
 
                     //REMOVER MATRICULA
-                    retorno = removerMatricula(matriculas, idMatricula, idAluno, &totalAlunos);
+                    retorno = removerMatricula(matriculas, idMatricula, idAluno, &totalMatriculas);
                     if (retorno == 1) {
                         printf(YEL"Matricula nao encontrada\n");
                         printf(CYN"Aperte ENTER para voltar ao menu\n");
@@ -670,7 +670,7 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                     free(opcao);
 
                     //PESQUISAR MATRICULA POR ID DE MATRICULA
-                    retorno = pesquisarMatricula(matriculas, idMatricula, idAluno, totalAlunos);
+                    retorno = pesquisarMatricula(matriculas, idMatricula, idAluno, totalMatriculas);
                     if (retorno == 1) {
                         printf(YEL"Matricula nao encontrada\n");
                         printf(CYN"Aperte ENTER para voltar ao menu\n");
@@ -688,7 +688,7 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                     free(opcao);
 
                     //PESQUISAR MATRICULA POR ID DE ALUNO
-                    retorno = pesquisarMatricula(matriculas, idMatricula, idAluno, totalAlunos);
+                    retorno = pesquisarMatricula(matriculas, idMatricula, idAluno, totalMatriculas);
                     if (retorno == 1) {
                         printf(YEL"Matricula nao encontrada\n");
                         printf(CYN"Aperte ENTER para voltar ao menu\n");
@@ -710,7 +710,7 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                 free(opcao);
 
                 //ALTERAR MATRICULA POR ID
-                alterarMatricula(matriculas, idMatricula, totalAlunos, alunos, cursos, &totalAlunos, &totalCursos);
+                alterarMatricula(matriculas, idMatricula, totalMatriculas, alunos, cursos, &totalAlunos, &totalCursos);
                 printf("Aperte ENTER para voltar ao menu\n");
                 free(getUserInput());
                 break;
