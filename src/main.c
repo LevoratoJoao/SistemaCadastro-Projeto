@@ -42,7 +42,7 @@ int main()
         while (1)
         {
             system("clear");
-            printf(BLU "----------------------\n- SISTEMA DE ESCOLAR -\n----------------------\n");
+            printf(BLU "----------------------\n- SISTEMA    ESCOLAR -\n----------------------\n");
             printf(CYN"1 - Acessar base de dados\n2 - Cadastrar novo usuario\n3 - Sair\n");
             opcao = getUserInput();
 

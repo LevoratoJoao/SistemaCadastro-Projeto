@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <utils.h>
 
-#define TAMANHO 10
+#define BUFFER_SIZE 10
 
 /* Faz a leitura de uma sequência de caracteres até achar o caracter de parada ou '\n' ou EOF.
  * Durante a leitura, suprime o '\r' caso houver.
- * Aloca em blocos de tamanho TAMANHO.
+ * Aloca em blocos de tamanho BUFFER_SIZE.
  * Caso encontre o EOF, altera 'fimArquivo' para verdadeiro
  * Adiciona o '\0' no final da string criada.
  * Retorna a string.
@@ -21,8 +21,8 @@ char *lerString(FILE *f, char parada) {
             tmp = getc(f);
         }
 
-        if (cont % TAMANHO == 0) { // Aloca em blocos de tamanho TAMANHO
-            linha = realloc(linha, sizeof(char) * (cont + TAMANHO));
+        if (cont % BUFFER_SIZE == 0) { // Aloca em blocos de BUFFER_SIZE BUFFER_SIZE
+            linha = realloc(linha, sizeof(char) * (cont + BUFFER_SIZE));
         }
 
         if (tmp == parada) {

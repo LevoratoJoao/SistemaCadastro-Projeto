@@ -40,7 +40,7 @@ void userInterface() {
     char *opcao = NULL;
 
     while (true) {
-        printf(BLU"----------------------\n- SISTEMA DE ESCOLAR -\n----------------------\n");
+        printf(BLU"----------------------\n- SISTEMA    ESCOLAR -\n----------------------\n");
         printf("---- MENU INICIAL ----\n");
         printf(CYN"- Digite o numero da base de dados que deseja acessar:\n- 1 . Alunos\n- 2 . Cursos\n- 3 . Matriculas\n- 4 . Sair do sistema\n----------------------\n");
         printf("Digite sua opção:\n");
@@ -301,7 +301,7 @@ Aluno *alunosOptions(Aluno *alunos) {
                 break;
 
             case 8: // Voltar ao menu inicial
-                //system("clear");
+                system("clear");
                 return alunos;
                 break;
         }
@@ -493,7 +493,7 @@ Curso *cursosOptions(Curso *cursos) {
                     system("clear");
 
                 } else {
-                    printf("Digite o ID do curso a ser pesquisado:\n");
+                    printf("Digite o ID do curso a ser alterado:\n");
                     id = getUserInput();
                     idCurso = atoi(id);
                     free(id);
@@ -521,6 +521,7 @@ Curso *cursosOptions(Curso *cursos) {
 
             case 8: // Voltar ao menu inicial
                 //free(matriculas);
+                system("clear");
                 return cursos;
                 break;
         }
@@ -583,6 +584,7 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                 //INSERIR O MATRICULA
                 matriculas = inserirMatricula(matriculas,  alunos, cursos, &totalMatriculas, &totalAlunos, &totalCursos);
                 printf(CYN"TOTAL MATRICULAS: %d\n", totalMatriculas);
+                setbuf(stdin, NULL);
                 break;
 
             case 2: // Remover matricula
@@ -711,8 +713,6 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
 
                 //ALTERAR MATRICULA POR ID
                 alterarMatricula(matriculas, idMatricula, totalMatriculas, alunos, cursos, &totalAlunos, &totalCursos);
-                printf("Aperte ENTER para voltar ao menu\n");
-                free(getUserInput());
                 break;
 
             case 5: // Listar alunos
@@ -729,8 +729,8 @@ Matricula *matriculasOptions(Matricula *matriculas, Aluno *alunos, Curso *cursos
                 break;
 
             case 8: // Voltar ao menu inicial
-                //system("clear");
                 free(alunos);
+                system("clear");
                 free(cursos);
                 return matriculas;
                 break;

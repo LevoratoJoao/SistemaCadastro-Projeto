@@ -313,7 +313,6 @@ void alterarCurso(Curso cursos[], char nome[], int id, int total)
                 } else
                 {
                     printf(GRN"Curso alterado no sistema!\n");
-                    system("clear");
                 }
             } while (verificarCurso(cursos, i) == 1);//Verificacao de preenchimento das informacoes
         }
@@ -353,6 +352,7 @@ FILE *salvarArqCurso(FILE *arq, Curso *cursos, int *total)
     arq = fopen(nome, "r+b");
 
     printf(YEL"Salvando os dados...\nNao feche o programa!\n");
+    usleep(200000);
     for (int i = 0; i < *total; i++)
     {
         fwrite(&cursos[i], sizeof(Curso), 1, arq); //Escreve os dados no arquivo
@@ -381,7 +381,7 @@ FILE *salvarArqCurso(FILE *arq, Curso *cursos, int *total)
 void exportarCursos(Curso *cursos, int total) {
     printf(YEL"Exportando dados dos cursos...\n");
     printf("Aguarde...\n");
-    usleep(100000);
+    usleep(200000);
     char cursos_csv[50];
     sprintf(cursos_csv, "%s.csv", CURSO_CSV);
     FILE *arq_csv = fopen(cursos_csv, "w+");

@@ -113,7 +113,7 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
     // }
     while (valorOpcao != 2) //Enquanto não for escolhido a opção de sair
     {
-        for (int i = 1; i <= *total; i++) { //Verifica se tem um espaço disponível (id = 0)
+        for (int i = 0; i <= *total; i++) { //Verifica se tem um espaço disponível (id = 0)
             if (alunos[i].idAluno == 0) {
                 indice = i;
                 break;
@@ -377,7 +377,8 @@ FILE *salvarArqAluno(FILE *arq, Aluno *alunos, int *total)
     arq = fopen(nome, "r+b");
 
     printf(YEL"Salvando os dados...\nNao feche o programa!\n");
-    for (int i = 0; i < *total; i++)
+    usleep(200000);
+    for (int i = 0; i <= *total; i++)
     {
         fwrite(&alunos[i], sizeof(Aluno), 1, arq);
     }
@@ -405,9 +406,9 @@ FILE *salvarArqAluno(FILE *arq, Aluno *alunos, int *total)
 void exportarAlunos(Aluno *alunos, int total) {
     printf(YEL"Exportando dados dos alunos...\n");
     printf("Aguarde...\n");
-    usleep(100000);
+    usleep(200000);
     char alunos_csv[50];
-    sprintf(alunos_csv, "%s.csv", ALUNO_CSV);
+    sprintf(alunos_csv, "%s.csv", ALUNO_CSV);       
     FILE *arq_csv = fopen(alunos_csv, "w+");
     if (arq_csv == NULL) {
         printf(RED"Erro ao abrir o arquivo!\n");
