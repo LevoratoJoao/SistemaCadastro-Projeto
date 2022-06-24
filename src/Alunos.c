@@ -188,7 +188,7 @@ Aluno *inserirAluno(Aluno *alunos, int *total)
 }
 
 /**
- * @brief Limpa os dados do aluno que o usuario deseja excluir, deixando assim uma posicao livre no sistema
+ * @brief Limpa os dados do aluno que o usuario deseja excluir, deixando assim uma posicao livre no sistema (ainda é contado como total de alunos no sistema)
  *
  * @param alunos
  * @param indice
@@ -303,23 +303,23 @@ void alterarAluno(Aluno alunos[], char nome[], int id, int total)
 
                 switch (valorOpcao)
                 {
-                case 1:
+                case 1: //Nome
                     printf(CYN"Nome: ");
                     setbuf(stdin, NULL);
                     fgets(alunos[i].nome, 50, stdin);
                     alunos[i].nome[strcspn(alunos[i].nome, "\n")] = '\0';
                     break;
-                case 2:
+                case 2: //Idade
                     printf("Idade: ");
                     scanf("%d", &alunos[i].idade);
                     break;
-                case 3:
+                case 3: //Nascimento
                     printf("Data de nascimento: dd/mm/aa\n");
                     scanf("%d", &alunos[i].nascimento.dia);
                     scanf("%d", &alunos[i].nascimento.mes);
                     scanf("%d", &alunos[i].nascimento.ano);
                     break;
-                case 4:
+                case 4: //Cidade
                     printf("Cidade em que nasceu: ");
                     setbuf(stdin, NULL);
                     fgets(alunos[i].cidade, 30, stdin);
@@ -354,7 +354,11 @@ void listarAlunos(Aluno alunos[], int total)
 {
     for (int i = 0; i < total; i++)
     {
-        printf(CYN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
+        if (alunos[i].idAluno != 0)
+        {
+            printf("---------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            printf(CYN"ID: %d | Nome: %10s | Idade: %d | Nascimento: %d/%d/%d | Cidade: %10s\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano, alunos[i].cidade);
+        }
     }
     printf("Total de alunos registrados no sistema: %d\n", total);
     printf("Aperte ENTER para voltar ao menu\n");
@@ -398,7 +402,7 @@ FILE *salvarArqAluno(FILE *arq, Aluno *alunos, int *total)
 }
 
 /**
- * @brief Exporta os dados de cursos para um arquivo .csv
+ * @brief Exporta os dados de alunos para um arquivo .csv
  *
  * @param alunos
  * @param total
@@ -408,7 +412,7 @@ void exportarAlunos(Aluno *alunos, int total) {
     printf("Aguarde...\n");
     usleep(200000);
     char alunos_csv[50];
-    sprintf(alunos_csv, "%s.csv", ALUNO_CSV);       
+    sprintf(alunos_csv, "%s.csv", ALUNO_CSV); //Formatar as informações
     FILE *arq_csv = fopen(alunos_csv, "w+");
     if (arq_csv == NULL) {
         printf(RED"Erro ao abrir o arquivo!\n");
@@ -417,7 +421,7 @@ void exportarAlunos(Aluno *alunos, int total) {
     fputs("ID, Nome, Idade, Cidade, Nascimento\n", arq_csv); //Cabeçalho do arquivo csv
     for (int i = 0; i < total; i++)
     {
-        fprintf(arq_csv, "%d, %s, %d, %s, %d/%d/%d\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].cidade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano);
+        fprintf(arq_csv, "%d, %s, %d, %s, %d/%d/%d\n", alunos[i].idAluno, alunos[i].nome, alunos[i].idade, alunos[i].cidade, alunos[i].nascimento.dia, alunos[i].nascimento.mes, alunos[i].nascimento.ano); //Escrever no csv
     }
     printf(GRN"Dados exportados com sucesso!\n");
     printf(CYN"Aperte ENTER para voltar ao menu\n");

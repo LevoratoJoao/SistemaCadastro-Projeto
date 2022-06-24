@@ -174,7 +174,7 @@ Curso *inserirCurso(Curso *cursos, int *total)
 }
 
 /**
- * @brief Limpa os dados do Curso que o usuario deseja excluir, deixando assim uma posicao livre no sistema
+ * @brief Limpa os dados do Curso que o usuario deseja excluir, deixando assim uma posicao livre no sistema (ainda é contado como total de cursos no sistema)
  *
  * @param cursos
  * @param indice
@@ -329,7 +329,12 @@ void listarCursos(Curso cursos[], int total)
 {
     for (int i = 0; i < total; i++)
     {
-        printf(CYN"ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n", cursos[i].idCurso, cursos[i].nome, cursos[i].duracao, cursos[i].periodo);
+        if (cursos[i].idCurso != 0)
+        {
+            printf("---------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            printf(CYN"ID: %d | Nome: %10s | Duracao: %d | Periodo: %10s\n", cursos[i].idCurso, cursos[i].nome, cursos[i].duracao, cursos[i].periodo);
+        }
+
     }
     printf("Total de cursos registrados no sistema: %d\n", total);
     printf("Aperte ENTER para voltar ao menu\n");
@@ -383,7 +388,7 @@ void exportarCursos(Curso *cursos, int total) {
     printf("Aguarde...\n");
     usleep(200000);
     char cursos_csv[50];
-    sprintf(cursos_csv, "%s.csv", CURSO_CSV);
+    sprintf(cursos_csv, "%s.csv", CURSO_CSV); //Formatar as informações
     FILE *arq_csv = fopen(cursos_csv, "w+");
     if (arq_csv == NULL) {
         printf(RED"Erro ao abrir o arquivo!\n");

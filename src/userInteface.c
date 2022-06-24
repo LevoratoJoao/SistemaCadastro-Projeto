@@ -12,9 +12,9 @@
 #include <Matriculas.h>
 
 //Defines para os arquivos
-#define ALUNO "./dataAluno.dat"
-#define CURSO "./dataCurso.dat"
-#define MATRICULA "./dataMatricula.dat"
+#define ALUNO "./dataBase/dataAluno.dat"
+#define CURSO "./dataBase/dataCurso.dat"
+#define MATRICULA "./dataBase/dataMatricula.dat"
 
 //Defines uteis
 #define MAX 10

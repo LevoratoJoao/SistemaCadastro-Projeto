@@ -18,6 +18,12 @@
 #define RESET "\x1B[0m"
 #define BLU "\x1B[34m"
 
+/**
+ * @brief Abre o arquivo que estao salvos as informacoes das matriculas
+ *
+ * @param nome
+ * @return FILE*
+ */
 FILE *abrirArqMatricula(char *nome)
 {
     FILE *arq = fopen(nome, "r+b");
@@ -37,6 +43,13 @@ FILE *abrirArqMatricula(char *nome)
     return arq;
 }
 
+/**
+ * @brief Le o arquivo de mmatriculas e armazena os dados em um vetor de matriculas
+ *
+ * @param arquivo
+ * @param total
+ * @return Matricula*
+ */
 Matricula *getMatricula(FILE *arquivo, int *total) {
     Matricula *matriculas = NULL;
     int cont = 0;
@@ -59,6 +72,13 @@ Matricula *getMatricula(FILE *arquivo, int *total) {
     return matriculas;
 }
 
+/**
+ * @brief If() -- verifica se os dados da matricula foram inseridos corretamente
+ *
+ * @param matriculas
+ * @param indice
+ * @return int
+ */
 int verificarMatricula(Matricula *matriculas, int indice)
 {
     if (matriculas[indice].anoMatricula <= 0 || matriculas[indice].coeficiente < 0 || matriculas[indice].semestre < 0 || matriculas[indice].aluno.idAluno < 0 || matriculas[indice].curso.idCurso < 0)//If() -- verifica se os dados do Curso foram inseridos corretamente
@@ -69,6 +89,17 @@ int verificarMatricula(Matricula *matriculas, int indice)
     }
 }
 
+/**
+ * @brief Funcao para inserir as informacoes da matricula
+ *
+ * @param matriculas
+ * @param alunos
+ * @param cursos
+ * @param totalMatriculas
+ * @param totalAlunos
+ * @param totalCursos
+ * @return Matricula*
+ */
 Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos, int *totalMatriculas, int *totalAlunos, int *totalCursos)
 {
     int indice = 0; //indice
@@ -97,14 +128,14 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
             }
         }
 
-        do {
+        do { //loop de inserir
             matriculas[indice].idMatricula = indice + 1;
             printf(CYN"\nMatricula %i\n", indice + 1);
             printf("ID do aluno: ");
             scanf("%d", &matriculas[indice].aluno.idAluno);
             for (int i = 0; i < *totalAlunos; i++)
             {
-                if (matriculas[indice].aluno.idAluno == alunos[i].idAluno)
+                if (matriculas[indice].aluno.idAluno == alunos[i].idAluno) //Verifica se o aluno inserido esta no sistema
                 {
                     matriculas[indice].aluno = alunos[i];
                     printf("Informacoes do aluno: \n");
@@ -129,7 +160,7 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
             scanf("%d", &matriculas[indice].curso.idCurso);
             for (int i = 0; i < *totalCursos; i++)
             {
-                if (matriculas[indice].curso.idCurso == cursos[i].idCurso)
+                if (matriculas[indice].curso.idCurso == cursos[i].idCurso) //Verifica se o curso inserido esta no sistema
                 {
                     matriculas[indice].curso = cursos[i];
                     printf("Informacoes do curso: \n");
@@ -138,10 +169,12 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
                     printf("Periodo: %s\n", matriculas[indice].curso.periodo);
                     printf("Duracao (semestres): %d\n", matriculas[indice].curso.duracao);
                     naoTem = 0;
+                    break;
                 } else {
                     naoTem = 1;
                 }
             }
+            setbuf(stdin, NULL);
             if (naoTem == 1)
             {
                 printf(YEL"O ID do curso inserido nao se encontra na base de dados do sistema!\n");
@@ -189,6 +222,13 @@ Matricula *inserirMatricula(Matricula *matriculas, Aluno *alunos, Curso *cursos,
     return matriculas;
 }
 
+/**
+ * @brief Limpa os dados da matricula que o usuario deseja excluir, deixando assim uma posicao livre no sistema (ainda é contado como total de matriculas no sistema)
+ *
+ * @param matriculas
+ * @param indice
+ * @return Matricula
+ */
 Matricula limparMatricula(Matricula matriculas[], int indice)
 {
     matriculas[indice].idMatricula = 0;
@@ -210,6 +250,15 @@ Matricula limparMatricula(Matricula matriculas[], int indice)
     return matriculas[indice];
 }
 
+/**
+ * @brief Funcao que recebe o id da matricula/id do aluno que o usuario deseja remover, faz a busca pelo mesmo e retorna 1 caso nao seja encontrado e 0 caso encontre
+ *
+ * @param matriculas
+ * @param id
+ * @param idAluno
+ * @param total
+ * @return int
+ */
 int removerMatricula(Matricula *matriculas, int id, int idAluno, int *total)
 {
     char *confirmacao;
@@ -244,6 +293,15 @@ int removerMatricula(Matricula *matriculas, int id, int idAluno, int *total)
     return 1;
 }
 
+/**
+ * @brief Pesquisar matricula pelo id da matricula/aluno desejado no sistema, se achar retorna 0 se nao retorna 1
+ *
+ * @param matriculas
+ * @param id
+ * @param idAluno
+ * @param total
+ * @return int
+ */
 int pesquisarMatricula(Matricula *matriculas, int id, int idAluno, int total)
 {
     for (int i = 0; i < total; i++)
@@ -257,6 +315,17 @@ int pesquisarMatricula(Matricula *matriculas, int id, int idAluno, int total)
     return 1;
 }
 
+/**
+ * @brief Funcao para realizar a alteracao das informacoes da matricula desejada
+ *
+ * @param matriculas
+ * @param id
+ * @param total
+ * @param alunos
+ * @param cursos
+ * @param totalAlunos
+ * @param totalCursos
+ */
 void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, Curso *cursos, int *totalAlunos, int *totalCursos)
 {
     for (int i = 0; i < total; i++)
@@ -267,7 +336,6 @@ void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, C
             {
                 printf(YEL"ID da matricula: %d | ID: do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semestre: %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
                 printf(CYN"Qual informacao deseja alterar do registro da matricula ?\n1 - Informacoes do aluno\n    As alteracoes serao feitas pelo ID do aluno, ira substituir todas as informacoes do aluno dessa matricula pela do aluno do ID inserido\n2 - Informacoes do curso\n    As alteracoes serao feitas pelo ID do curso, ira substituir todas as informacoes do curso dessa matricula pela do curso do ID inserido\n3 - Ano da matricula\n3 - Coeficiente\n5 - Semestre\n6 - Cancelar\n");//Opcoes de alteracao (ID nao pode ser alterado)
-
 
                 char *opcao = getUserInput();
 
@@ -281,7 +349,7 @@ void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, C
 
                 switch (valorOpcao)
                 {
-                case 1:
+                case 1: //Aluno
                     printf(CYN"Digite o ID do aluno: ");
                     scanf("%d", &matriculas[i].aluno.idAluno);
                     for (int j = 0; j < *totalAlunos; j++)
@@ -293,7 +361,7 @@ void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, C
                     }
                     break;
 
-                case 2:
+                case 2: //Curso
                     printf("Digite o ID do curso: ");
                     scanf("%d", &matriculas[i].curso.idCurso);
                     for (int j = 0; j < *totalCursos; j++)
@@ -304,15 +372,15 @@ void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, C
                         }
                     }
                     break;
-                case 3:
+                case 3: //Ano matricula
                     printf("Ano da matricula: ");
                     scanf("%d", &matriculas[i].anoMatricula);
                     break;
-                case 4:
+                case 4: //Coeficiente
                     printf("Digite o novo coeficiente: ");
                     scanf("%f", &matriculas[i].coeficiente);
                     break;
-                case 5:
+                case 5: //Semestre
                     printf("Digite o novo semestre: ");
                     scanf("%d", &matriculas[i].semestre);
                     break;
@@ -339,12 +407,19 @@ void alterarMatricula(Matricula *matriculas, int id, int total, Aluno *alunos, C
     }
 }
 
+/**
+ * @brief Lista todas matriculas cadastrados no sistema
+ *
+ * @param matriculas
+ * @param total
+ */
 void listarMatriculas(Matricula matriculas[], int total)
 {
     for (int i = 0; i < total; i++)
     {
         if (matriculas[i].idMatricula != 0)
         {
+            printf("---------------------------------------------------------------------------------------------------------------------------------------------------\n");
             printf(CYN"ID da matricula: %d | ID: do aluno: %d | Nome: %10s | Idade: %d | Cidade: %10s | Data de nascimento: %d/%d/%d | ID do curso: %d | Curso: %10s | Periodo: %10s | Duracao: %d | Ano de matricula: %d | Coeficiente: %.2f | Semmestre: %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
         }
     }
@@ -354,6 +429,14 @@ void listarMatriculas(Matricula matriculas[], int total)
     system("clear");
 }
 
+/**
+ * @brief Salva as informacoes da memoria no arquivo
+ *
+ * @param arq
+ * @param matriculas
+ * @param total
+ * @return FILE*
+ */
 FILE *salvarArqMatricula(FILE *arq, Matricula *matriculas, int *total)
 {
     int aux;
@@ -381,22 +464,28 @@ FILE *salvarArqMatricula(FILE *arq, Matricula *matriculas, int *total)
     return arq;
 }
 
+/**
+ * @brief Exporta os dados de alunos para um arquivo .csv
+ *
+ * @param matriculas
+ * @param total
+ */
 void exportarMatriculas(Matricula *matriculas, int total) {
     printf(YEL"Exportando dados das matriculas...\n");
     printf("Aguarde...\n");
     usleep(200000);
     char matriculas_csv[201];
-    sprintf(matriculas_csv, "%s.csv", MATRICULA_CSV);
+    sprintf(matriculas_csv, "%s.csv", MATRICULA_CSV); //Formatar as informações
     FILE *arq_csv = fopen(matriculas_csv, "w+");
     if (arq_csv == NULL)
     {
         printf(RED"Erro ao abrir o arquivo!\n");
         return;
     }
-    fprintf(arq_csv, "ID da matricula, ID do aluno, Nome do aluno, Idade do aluno, Cidade do aluno, Data de nascimento, ID do curso, Nome do curso, Periodo do curso, Duracao do curso, Ano de matricula, Coeficiente, Semestre\n");
+    fprintf(arq_csv, "ID da matricula, ID do aluno, Nome do aluno, Idade do aluno, Cidade do aluno, Data de nascimento, ID do curso, Nome do curso, Periodo do curso, Duracao do curso, Ano de matricula, Coeficiente, Semestre\n"); //Cabeçalho
     for (int i = 0; i < total; i++)
     {
-        fprintf(arq_csv, "%d, %d, %s, %d, %s, %d/%d/%d, %d, %s, %s, %d, %d, %.2f, %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre);
+        fprintf(arq_csv, "%d, %d, %s, %d, %s, %d/%d/%d, %d, %s, %s, %d, %d, %.2f, %d\n", matriculas[i].idMatricula, matriculas[i].aluno.idAluno, matriculas[i].aluno.nome, matriculas[i].aluno.idade, matriculas[i].aluno.cidade, matriculas[i].aluno.nascimento.dia, matriculas[i].aluno.nascimento.mes, matriculas[i].aluno.nascimento.ano, matriculas[i].curso.idCurso, matriculas[i].curso.nome, matriculas[i].curso.periodo, matriculas[i].curso.duracao, matriculas[i].anoMatricula, matriculas[i].coeficiente, matriculas[i].semestre); //Escrever no csv
     }
     printf(GRN"Dados exportados com sucesso!\n");
     setbuf(stdin, NULL);

@@ -20,7 +20,7 @@
 #include <userInterface.h>
 #include <utils.h>
 
-#define USER "./dataUser.dat"
+#define USER "./dataBase/dataUser.dat"
 #define MAX 10
 #define RED "\x1B[31m"
 #define GRN "\x1B[32m"
@@ -67,7 +67,7 @@ int main()
                     printf(GRN"Saindo do sistema...\n");
                     free(usuario);
                     return EXIT_SUCCESS;
-
+                
             }
         }
     }
